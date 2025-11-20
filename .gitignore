@@ -1,0 +1,6 @@
+.next/
+node_modules/
+
+# Environment files (except production template)
+.env.local
+.env.development

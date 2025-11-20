@@ -1,0 +1,286 @@
+'use client';
+import { usePathname } from 'next/navigation';
+
+function Sidebar({ isOpen, onClose }) {
+  const pathname = usePathname();
+
+  return (
+    <>
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div 
+          className=""
+          onClick={onClose}
+        />
+      )}
+      
+      <div className={`fixed z-40 inset-y-0 left-0 transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}>
+        <aside className="w-68 h-full border-r transition-colors duration-300 pt-16" style={{ backgroundColor: 'var(--sidebar-bg)', borderColor: 'var(--border-color)' }>
+        <div className="p-6">
+          <h1 className="text-xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>Woocommerce</h1>
+          <nav className="space-y-1">
+            <a
+              href="/dashboard"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/dashboard'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`}
+              style={{ color: pathname !== '/dashboard' ? 'var(--text-color)' : undefined }>
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M21 20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.49a1 1 0 0 1 .386-.79l8-6.223a1 1 0 0 1 1.228 0l8 6.223a1 1 0 0 1 .386.79zm-2-1V9.978l-7-5.444l-7 5.444V19z"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">My Droplets</span>
+            </a>
+            <a
+              href="/metrics"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/metrics'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 56 56">
+                <path
+                  fill="currentColor"
+                  d="m45.8 32.972l-2.087 7.544c-.768 2.775-3.749 3.145-5.196.67l-7.409-12.671l-6.47 10.004c-1.385 2.14-4.138 2.154-5.537.02l-2.954-4.51l-1.353 1.387c-1.15 1.18-2.99 1.657-4.595 1.273v5.432c0 2.438 1.313 3.68 3.656 3.68h28.313c2.32 0 3.633-1.242 3.633-3.68zm0-15V13.88c0-2.438-1.312-3.68-3.632-3.68H13.855c-2.343 0-3.656 1.242-3.656 3.68v18.47l.86.424c.213.104.705.02.872-.151l1.696-1.74c1.664-1.707 4.29-1.452 5.596.542l2.636 4.023l6.568-10.154c1.41-2.18 4.193-2.12 5.504.123l6.659 11.388zM13.786 49.575c-4.875 0-7.36-2.414-7.36-7.265V13.69c0-4.851 2.485-7.265 7.36-7.265h28.453c4.899 0 7.336 2.437 7.336 7.265v28.62c0 4.828-2.437 7.265-7.336 7.265z"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">metrics Panel</span>
+            </a>
+            <a
+              href="/resource-monitor"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/resource-monitor'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="23"
+                height="23"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 20H9m-5-6.2V8.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C5.52 5 6.08 5 7.2 5h9.6c1.12 0 1.68 0 2.107.218c.377.192.683.497.875.874c.218.427.218.987.218 2.105v5.606c0 1.118 0 1.677-.218 2.104a2 2 0 0 1-.875.875c-.427.218-.986.218-2.104.218H7.197c-1.118 0-1.678 0-2.105-.218a2 2 0 0 1-.874-.875C4 15.48 4 14.92 4 13.8"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">Resource Monitor</span>
+            </a>
+            <a
+              href="/git-manager"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/git-manager'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+              >
+                <g fill="none">
+                  <path d="M8 6a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0m13 12a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0M8 18a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0" />
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="square"
+                    strokeWidth="2"
+                    d="M18.5 15.5v-1a3 3 0 0 0-3-3h-7a3 3 0 0 1-3-3m13 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 0 0-5Zm-13-7a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5Zm0 .5v6M8 18a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0Z"
+                  />
+                </g>
+              </svg>
+              <span className="font-medium text-[14px]">Git Manager</span>
+            </a>
+            <a
+              href="/logs"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/logs'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                >
+                  <path d="M14.186 2.753v3.596c0 .487.194.955.54 1.3a1.85 1.85 0 0 0 1.306.539h4.125" />
+                  <path d="M20.25 8.568v8.568a4.25 4.25 0 0 1-1.362 2.97a4.28 4.28 0 0 1-3.072 1.14h-7.59a4.3 4.3 0 0 1-3.1-1.124a4.26 4.26 0 0 1-1.376-2.986V6.862a4.25 4.25 0 0 1 1.362-2.97a4.28 4.28 0 0 1 3.072-1.14h5.714a3.5 3.5 0 0 1 2.361.905l2.96 2.722a2.97 2.97 0 0 1 1.031 2.189M7.647 7.647h3.265M7.647 12h8.706m-8.706 4.353h8.706" />
+                </g>
+              </svg>
+              <span className="font-medium text-[14px]">Logs</span>
+            </a>
+            <a
+              href="/shell"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/shell'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.497 11.5v1a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1m.278-7.649a2.5 2.5 0 0 0-3.572 3.147q-.187.241-.345.47c-.572.829-.202 1.898.678 2.388l2.96 1.644h5.047l2.924-1.642c.875-.49 1.242-1.557.672-2.383a10 10 0 0 0-.35-.477a2.5 2.5 0 0 0-3.572-3.147a2.5 2.5 0 0 0-4.442 0M8.497 7l.724-3.154m3.625 3.014L9.996 9M5.497 7l-.725-3.154M1.147 6.86L3.997 9"
+                  strokeWidth="1"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">Shell</span>
+            </a>
+            <a
+              href="/subscriptions"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/subscriptions'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="23"
+                height="23"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M19.2 17L21 7l-6.3 3L12 7l-2.7 3L3 7l1.8 10z"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">Subscriptions</span>
+            </a>
+            <a
+              href="/backup"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/backup'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+              >
+                <g fill="none">
+                  <path
+                    d="M1 14.5A5.5 5.5 0 0 0 6.5 20h11a5.5 5.5 0 0 0 .987-10.912a6.5 6.5 0 0 0-12.974 0A5.5 5.5 0 0 0 1 14.5"
+                    clipRule="evenodd"
+                  />
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="square"
+                    strokeWidth="2"
+                    d="M1 14.5A5.5 5.5 0 0 0 6.5 20h11a5.5 5.5 0 0 0 .987-10.912a6.5 6.5 0 0 0-12.974 0A5.5 5.5 0 0 0 1 14.5Z"
+                    clipRule="evenodd"
+                  />
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="square"
+                    strokeWidth="2"
+                    d="m15 11.5l-3-3l-3 3m3 4.5v-3m0 0V9z"
+                  />
+                </g>
+              </svg>
+              <span className="font-medium text-[14px]">Backup</span>
+            </a>           
+            <a
+              href="/domain-management"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/domain-management'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">Domain Management</span>
+            </a>
+            <a
+              href="/settings"
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition duration-300 ${
+                pathname === '/settings'
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'hover:bg-[var(--primary-color)] hover:text-white'
+              }`
+              style={{ color: pathname !== "/dashboard" ? "var(--text-color)" : undefined }}
+              }`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M7.05 6.462a2 2 0 0 0 2.63-1.519l.32-1.72a9 9 0 0 1 3.998 0l.322 1.72a2 2 0 0 0 2.63 1.519l1.649-.58a9 9 0 0 1 2.001 3.46l-1.33 1.14a2 2 0 0 0 0 3.037l1.33 1.139a9 9 0 0 1-2.001 3.46l-1.65-.58a2 2 0 0 0-2.63 1.519L14 20.777a9 9 0 0 1-3.998 0l-.322-1.72a2 2 0 0 0-2.63-1.519l-1.649.58a9 9 0 0 1-2.001-3.46l1.33-1.14a2 2 0 0 0 0-3.036L3.4 9.342a9 9 0 0 1 2-3.46zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="font-medium text-[14px]">Settings</span>
+            </a>
+          </nav>
+        </div>
+      </aside>
+    </div>
+    </>
+  );
+}
+
+export default Sidebar;

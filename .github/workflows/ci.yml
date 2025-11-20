@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linting
+      run: npm run lint || true
+      
+    - name: Build application
+      run: |
+        # Remove --turbopack flag for CI build
+        npm run build -- --no-turbopack || npm run build
+      env:
+        NODE_ENV: production
+        
+    - name: Check for build errors
+      run: |
+        if [ -d ".next" ]; then
+          echo "Build successful"
+        else
+          echo "Build failed - .next directory not found"
+          exit 1
+        fi
+
