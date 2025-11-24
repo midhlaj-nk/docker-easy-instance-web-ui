@@ -15,6 +15,7 @@ function InstanceCard({
   licenseExpiry,
   logo,
   overviewData, // New prop for real data
+  github_repo_url,
 }) {
   const { getInstanceDetail } = useInstancesStore();
   const router = useRouter();
@@ -22,7 +23,7 @@ function InstanceCard({
 
   const handleClick = () => {
     if (isNavigating) return; // Prevent multiple clicks
-    
+
     setIsNavigating(true);
     // Store the selected instance data in the store for the metrics page
     const instanceData = {
@@ -39,16 +40,17 @@ function InstanceCard({
       licenseExpiry,
       logo: overviewData?.logo || logo,
       status: overviewData?.status || (deployed ? 'deployed' : 'draft'),
-      instance_url: overviewData?.instance_url || ''
+      instance_url: overviewData?.instance_url || '',
+      github_repo_url,
     };
-    
+
     // Store the selected instance data
     const { setSelectedInstance } = useInstancesStore.getState();
     setSelectedInstance(instanceData);
-    
+
     // Navigate immediately without API call
     router.push('/metrics');
-    
+
     // Reset navigation state after a short delay
     setTimeout(() => setIsNavigating(false), 1000);
   };
@@ -60,9 +62,9 @@ function InstanceCard({
         className={`flex flex-col rounded-xl p-6 border border-transparent hover:border-[var(--primary-color)]
              transition-all duration-300 w-full text-left cursor-pointer
              ${isNavigating ? 'opacity-75 cursor-not-allowed' : ''}`}
-        style={{ 
-          backgroundColor: 'var(--background-secondary)', 
-          boxShadow: 'var(--card-shadow)' 
+        style={{
+          backgroundColor: 'var(--background-secondary)',
+          boxShadow: 'var(--card-shadow)'
         }}
       >
         {/* Header */}
@@ -74,36 +76,35 @@ function InstanceCard({
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--primary-color)]"></div>
               )}
             </div>
-                 <div className="flex items-center space-x-3">
-                   <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Version: {version}</span>
-                   <div className={`flex items-center px-3 py-1 rounded-2xl ${
-                     overviewData?.status === 'deployed' ? 'bg-emerald-500' : 
-                     overviewData?.status === 'draft' ? 'bg-gray-500' : 
-                     overviewData?.status === 'container_created' ? 'bg-yellow-500' : 'bg-red-500'
-                   }`}>
-                     <span className="text-xs font-medium text-white">
-                       {overviewData?.status === 'deployed' ? 'Deployed' : 
-                        overviewData?.status === 'draft' ? 'Draft' : 
-                        overviewData?.status === 'container_created' ? 'Onboarding' : 
+            <div className="flex items-center space-x-3">
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Version: {version}</span>
+              <div className={`flex items-center px-3 py-1 rounded-2xl ${overviewData?.status === 'deployed' ? 'bg-emerald-500' :
+                  overviewData?.status === 'draft' ? 'bg-gray-500' :
+                    overviewData?.status === 'container_created' ? 'bg-yellow-500' : 'bg-red-500'
+                }`}>
+                <span className="text-xs font-medium text-white">
+                  {overviewData?.status === 'deployed' ? 'Deployed' :
+                    overviewData?.status === 'draft' ? 'Draft' :
+                      overviewData?.status === 'container_created' ? 'Onboarding' :
                         overviewData?.status === 'maintenance_required' ? 'Maintenance' : 'Unknown'}
-                     </span>
-                   </div>
-                 </div>
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Logo/Icon */}
           {overviewData?.logo ? (
             <div className="w-16 h-16 flex items-center justify-center">
-              <img 
-                src={overviewData.logo} 
-                alt={`${name} logo`} 
+              <img
+                src={overviewData.logo}
+                alt={`${name} logo`}
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   e.target.nextElementSibling.style.display = 'flex';
                 }}
               />
-              <div className="w-full h-full items-center justify-center rounded-lg" style={{display: 'none', backgroundColor: 'var(--input-bg)'}}>
+              <div className="w-full h-full items-center justify-center rounded-lg" style={{ display: 'none', backgroundColor: 'var(--input-bg)' }}>
                 <span className="text-2xl font-bold" style={{ color: 'var(--primary-color)' }}>
                   {name.charAt(0)}
                 </span>
@@ -134,13 +135,13 @@ function InstanceCard({
           )}
         </div>
 
-              {/* Uptime */}
-              <div className="mb-6 pb-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Uptime</span>
-                  <span className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.uptime || '0d 0h 0m'}</span>
-                </div>
-              </div>
+        {/* Uptime */}
+        <div className="mb-6 pb-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Uptime</span>
+            <span className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.uptime || '0d 0h 0m'}</span>
+          </div>
+        </div>
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 gap-4 mb-6">
@@ -167,7 +168,7 @@ function InstanceCard({
                 CPU Request
               </span>
             </div>
-                  <p className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.cpu_usage || cpuRequest}</p>
+            <p className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.cpu_usage || cpuRequest}</p>
           </div>
 
           {/* Memory Request */}
@@ -220,9 +221,9 @@ function InstanceCard({
               </svg>
               <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Storage Used</span>
             </div>
-                  <span className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
-                    {overviewData?.pvc_used || '0Gi'} - {overviewData?.pvc_available || storageUsed}
-                  </span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
+              {overviewData?.pvc_used || '0Gi'} - {overviewData?.pvc_available || storageUsed}
+            </span>
           </div>
 
           <div className="flex items-center justify-between">
@@ -246,9 +247,9 @@ function InstanceCard({
               </svg>
               <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Last Backup</span>
             </div>
-                  <span className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
-                    {overviewData?.last_backup || lastBackup}
-                  </span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
+              {overviewData?.last_backup || lastBackup}
+            </span>
           </div>
 
           <div className="flex items-center justify-between">

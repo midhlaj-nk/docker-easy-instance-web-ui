@@ -16,9 +16,10 @@ function LogsPage({ selectedInstance }) {
   const [autoScroll, setAutoScroll] = useState(true);
   const [displayLogs, setDisplayLogs] = useState([]);
   const [podName, setPodName] = useState('');
+  const [logType, setLogType] = useState('odoo');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const logContainerRef = useRef(null);
   const refreshIntervalRef = useRef(null);
   const ansiUp = new AnsiUp();
@@ -36,14 +37,14 @@ function LogsPage({ selectedInstance }) {
         setIsLoading(true);
       }
       setError(null);
-      
+
       // Get logs from Odoo backend which uses Kubernetes Python API
       // Backend endpoint: /api/v1/instances/<instance_id>/logs
       const baseUrl = (API_BASE_URL || 'https://web.easyinstance.com').replace(/\/api\/?$/, '').replace(/\/$/, '');
-      const logsUrl = `${baseUrl}/api/v1/instances/${selectedInstance?.id}/logs?tail=100`;
-      
+      const logsUrl = `${baseUrl}/api/v1/instances/${selectedInstance?.id}/logs?tail=100&type=${logType}`;
+
       logger.log('Fetching logs from:', logsUrl);
-      
+
       const response = await fetch(logsUrl, {
         method: 'GET',
         headers: {
@@ -61,13 +62,13 @@ function LogsPage({ selectedInstance }) {
         const textResponse = await response.text();
         throw new Error(`Server returned non-JSON response (${response.status}): ${textResponse.substring(0, 100)}`);
       }
-      
+
       if (response.ok && data.success) {
         // Set pod name from response (only on initial load)
         if (isInitialLoad && data.data?.podName) {
           setPodName(data.data.podName);
         }
-        
+
         if (data.data?.logLines && data.data.logLines.length > 0) {
           if (isInitialLoad) {
             // On initial load, replace all logs
@@ -77,20 +78,20 @@ function LogsPage({ selectedInstance }) {
             setDisplayLogs(prevLogs => {
               const newLogs = data.data.logLines;
               const existingLogs = prevLogs;
-              
+
               // Find the last log that exists in both arrays to avoid duplicates
               const lastExistingIndex = existingLogs.length - 1;
               let startIndex = 0;
-              
+
               if (lastExistingIndex >= 0 && newLogs.length > 0) {
                 const lastExistingLog = existingLogs[lastExistingIndex];
                 const lastExistingIndexInNew = newLogs.findIndex(log => log === lastExistingLog);
-                
+
                 if (lastExistingIndexInNew >= 0) {
                   startIndex = lastExistingIndexInNew + 1;
                 }
               }
-              
+
               // Append only new logs
               const logsToAppend = newLogs.slice(startIndex);
               return [...existingLogs, ...logsToAppend];
@@ -128,7 +129,7 @@ function LogsPage({ selectedInstance }) {
     if (selectedInstance?.id && token) {
       fetchRealLogs(true); // Initial load
     }
-  }, [selectedInstance?.id, token]);
+  }, [selectedInstance?.id, token, logType]); // Re-fetch when logType changes
 
   // Auto-refresh logs
   useEffect(() => {
@@ -143,7 +144,7 @@ function LogsPage({ selectedInstance }) {
         }
       };
     }
-  }, [autoScroll, selectedInstance?.id, token]);
+  }, [autoScroll, selectedInstance?.id, token, logType]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -183,7 +184,7 @@ function LogsPage({ selectedInstance }) {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-white pl-10 pr-4 py-2 rounded-lg outline-none transition-colors duration-300"
                     style={{
-                      
+
                       color: 'var(--text-color)',
                       border: '1px solid var(--border-color)',
                     }}
@@ -204,7 +205,28 @@ function LogsPage({ selectedInstance }) {
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
                 </div>
-                
+
+                <div className="flex rounded-lg overflow-hidden border border-[var(--border-color)]">
+                  <button
+                    onClick={() => setLogType('odoo')}
+                    className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${logType === 'odoo'
+                        ? 'bg-[var(--primary-color)] text-white'
+                        : 'bg-[var(--background-secondary)] text-[var(--text-secondary)] hover:bg-[var(--background)]'
+                      }`}
+                  >
+                    Odoo
+                  </button>
+                  <button
+                    onClick={() => setLogType('postgres')}
+                    className={`px-3 py-2 text-sm font-medium transition-colors duration-200 border-l border-[var(--border-color)] ${logType === 'postgres'
+                        ? 'bg-[var(--primary-color)] text-white'
+                        : 'bg-[var(--background-secondary)] text-[var(--text-secondary)] hover:bg-[var(--background)]'
+                      }`}
+                  >
+                    Postgres
+                  </button>
+                </div>
+
                 <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--background-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>
                   Pod: <span className="font-mono" style={{ color: 'var(--text-color)' }}>{podName || 'Loading...'}</span>
                 </div>
@@ -213,9 +235,8 @@ function LogsPage({ selectedInstance }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setAutoScroll(!autoScroll)}
-                  className={`px-5 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
-                    autoScroll ? 'bg-[var(--primary-color)] text-white' : ''
-                  }`}
+                  className={`px-5 py-2 rounded-md text-sm font-medium transition-all duration-300 ${autoScroll ? 'bg-[var(--primary-color)] text-white' : ''
+                    }`}
                   style={!autoScroll ? { backgroundColor: 'var(--background-secondary)', color: 'var(--text-color)', border: '1px solid var(--border-color)' } : {}}
                 >
                   Auto-scroll
@@ -251,8 +272,8 @@ function LogsPage({ selectedInstance }) {
               <div
                 ref={logContainerRef}
                 className="p-4 font-mono text-sm overflow-y-auto lg:min-h-[calc(100vh_-_210px)]"
-                style={{ 
-                  backgroundColor: '#1a1a1a', 
+                style={{
+                  backgroundColor: '#1a1a1a',
                   color: '#ffffff',
                   height: 'calc(100vh - 280px)',
                   border: '1px solid var(--border-color)',
@@ -267,7 +288,7 @@ function LogsPage({ selectedInstance }) {
                     </div>
                   </div>
                 )}
-                
+
                 {!isLoading && filteredLogs.length > 0 ? (
                   filteredLogs.map((log, index) => (
                     <div
@@ -280,10 +301,10 @@ function LogsPage({ selectedInstance }) {
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="9" y1="9" x2="15" y2="9"/>
-                        <line x1="9" y1="13" x2="15" y2="13"/>
-                        <line x1="9" y1="17" x2="13" y2="17"/>
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                        <line x1="9" y1="9" x2="15" y2="9" />
+                        <line x1="9" y1="13" x2="15" y2="13" />
+                        <line x1="9" y1="17" x2="13" y2="17" />
                       </svg>
                       <p className="mt-4 text-lg font-medium" style={{ color: 'var(--text-color)' }}>No logs available</p>
                       <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>

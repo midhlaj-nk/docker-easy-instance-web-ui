@@ -363,9 +363,8 @@ function GitManagerPage({ selectedInstance }) {
                               ].map((letter, index) => (
                                 <div
                                   key={index}
-                                  className={`l-${
-                                    index + 1
-                                  } letter animate-bounce`}
+                                  className={`l-${index + 1
+                                    } letter animate-bounce`}
                                   style={{ animationDelay: `${index * 0.1}s` }}
                                 >
                                   {letter}
@@ -571,11 +570,10 @@ function GitManagerPage({ selectedInstance }) {
 
                             {/* Permissions Section */}
                             <div
-                              className={`cy-gm-permissions transition-all duration-300 ${
-                                showPermissions
+                              className={`cy-gm-permissions transition-all duration-300 ${showPermissions
                                   ? "block opacity-100"
                                   : "hidden opacity-0"
-                              }`}
+                                }`}
                             >
                               <div className="cy-gm-permissions-header mb-3">
                                 <span
@@ -608,11 +606,10 @@ function GitManagerPage({ selectedInstance }) {
                                         }}
                                       >
                                         <span
-                                          className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ${
-                                            adminPermission
+                                          className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 ${adminPermission
                                               ? "transform translate-x-6"
                                               : ""
-                                          }`}
+                                            }`}
                                           style={{ backgroundColor: "white" }}
                                         ></span>
                                       </span>
@@ -729,7 +726,7 @@ function GitManagerPage({ selectedInstance }) {
                                                       "var(--primary-color)",
                                                   }}
                                                 >
-                                                  {permission}
+                                                  {permission.charAt(0).toUpperCase() + permission.slice(1)}
                                                 </span>
                                               )
                                           )}
@@ -796,7 +793,7 @@ function GitManagerPage({ selectedInstance }) {
                                       onClick={() =>
                                         handleRemoveInvitation(
                                           invitation.invitee?.login ||
-                                            invitation.login,
+                                          invitation.login,
                                           invitation.id
                                         )
                                       }

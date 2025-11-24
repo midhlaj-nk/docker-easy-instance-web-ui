@@ -31,11 +31,6 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
     dropbox_client_key: '',
     dropbox_client_secret: '',
     dropbox_folder: '',
-    // OneDrive
-    onedrive_client_key: '',
-    onedrive_client_secret: '',
-    onedrive_redirect_uri: '',
-    onedrive_folder_key: '',
     // NextCloud
     domain: '',
     next_cloud_user_name: '',
@@ -57,7 +52,6 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
     { value: 'sftp', label: 'SFTP' },
     { value: 'google_drive', label: 'Google Drive' },
     { value: 'dropbox', label: 'Dropbox' },
-    { value: 'onedrive', label: 'OneDrive' },
     { value: 'next_cloud', label: 'NextCloud' },
     { value: 'amazon_s3', label: 'Amazon S3' },
   ];
@@ -95,10 +89,6 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
         dropbox_client_key: '',
         dropbox_client_secret: '',
         dropbox_folder: '',
-        onedrive_client_key: '',
-        onedrive_client_secret: '',
-        onedrive_redirect_uri: '',
-        onedrive_folder_key: '',
         domain: '',
         next_cloud_user_name: '',
         next_cloud_password: '',
@@ -624,97 +614,6 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
                     <button
                       type="button"
                       onClick={() => handleOAuthSetup('Dropbox')}
-                      className="px-4 py-2 rounded-lg font-medium transition-all duration-300"
-                      style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
-                    >
-                      Setup OAuth Token
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* OneDrive */}
-              {formData.backup_destination === 'onedrive' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-                      Client ID *
-                    </label>
-                    <input
-                      type="text"
-                      name="onedrive_client_key"
-                      value={formData.onedrive_client_key || ''}
-                      onChange={handleChange}
-                      required
-                      placeholder="OneDrive Client ID"
-                      className="w-full px-4 py-2 rounded-lg outline-none transition-colors duration-300"
-                      style={{
-                        backgroundColor: 'var(--input-bg)',
-                        color: 'var(--text-color)',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-                      Client Secret *
-                    </label>
-                    <input
-                      type="password"
-                      name="onedrive_client_secret"
-                      value={formData.onedrive_client_secret || ''}
-                      onChange={handleChange}
-                      required
-                      placeholder="••••••••"
-                      className="w-full px-4 py-2 rounded-lg outline-none transition-colors duration-300"
-                      style={{
-                        backgroundColor: 'var(--input-bg)',
-                        color: 'var(--text-color)',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-                      Redirect URI *
-                    </label>
-                    <input
-                      type="text"
-                      name="onedrive_redirect_uri"
-                      value={formData.onedrive_redirect_uri || ''}
-                      onChange={handleChange}
-                      required
-                      placeholder="http://localhost:8069/token/success"
-                      className="w-full px-4 py-2 rounded-lg outline-none transition-colors duration-300"
-                      style={{
-                        backgroundColor: 'var(--input-bg)',
-                        color: 'var(--text-color)',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-                      Folder ID
-                    </label>
-                    <input
-                      type="text"
-                      name="onedrive_folder_key"
-                      value={formData.onedrive_folder_key || ''}
-                      onChange={handleChange}
-                      placeholder="OneDrive Folder ID"
-                      className="w-full px-4 py-2 rounded-lg outline-none transition-colors duration-300"
-                      style={{
-                        backgroundColor: 'var(--input-bg)',
-                        color: 'var(--text-color)',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <button
-                      type="button"
-                      onClick={() => handleOAuthSetup('OneDrive')}
                       className="px-4 py-2 rounded-lg font-medium transition-all duration-300"
                       style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
                     >

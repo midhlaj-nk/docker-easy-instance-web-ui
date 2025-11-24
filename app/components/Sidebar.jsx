@@ -41,27 +41,7 @@ function Sidebar({ isOpen, onClose }) {
         </svg>
       ),
     },
-    {
-      href: "/resource-monitor",
-      label: "Resource Monitor",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="23"
-          height="23"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15 20H9m-5-6.2V8.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C5.52 5 6.08 5 7.2 5h9.6c1.12 0 1.68 0 2.107.218c.377.192.683.497.875.874c.218.427.218.987.218 2.105v5.606c0 1.118 0 1.677-.218 2.104a2 2 0 0 1-.875.875c-.427.218-.986.218-2.104.218H7.197c-1.118 0-1.678 0-2.105-.218a2 2 0 0 1-.874-.875C4 15.48 4 14.92 4 13.8"
-          />
-        </svg>
-      ),
-    },
+
     {
       href: "/git-manager",
       label: "Git Manager",
@@ -133,27 +113,27 @@ function Sidebar({ isOpen, onClose }) {
         </svg>
       ),
     },
-    {
-      href: "/shell",
-      label: "Shell",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
-          viewBox="0 0 14 14"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9.497 11.5v1a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1m.278-7.649a2.5 2.5 0 0 0-3.572 3.147q-.187.241-.345.47c-.572.829-.202 1.898.678 2.388l2.96 1.644h5.047l2.924-1.642c.875-.49 1.242-1.557.672-2.383a10 10 0 0 0-.35-.477a2.5 2.5 0 0 0-3.572-3.147a2.5 2.5 0 0 0-4.442 0M8.497 7l.724-3.154m3.625 3.014L9.996 9M5.497 7l-.725-3.154M1.147 6.86L3.997 9"
-            strokeWidth="1"
-          />
-        </svg>
-      ),
-    },
+    // {
+    //   href: "/shell",
+    //   label: "Shell",
+    //   icon: (
+    //     <svg
+    //       xmlns="http://www.w3.org/2000/svg"
+    //       width="22"
+    //       height="22"
+    //       viewBox="0 0 14 14"
+    //     >
+    //       <path
+    //         fill="none"
+    //         stroke="currentColor"
+    //         strokeLinecap="round"
+    //         strokeLinejoin="round"
+    //         d="M9.497 11.5v1a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1m.278-7.649a2.5 2.5 0 0 0-3.572 3.147q-.187.241-.345.47c-.572.829-.202 1.898.678 2.388l2.96 1.644h5.047l2.924-1.642c.875-.49 1.242-1.557.672-2.383a10 10 0 0 0-.35-.477a2.5 2.5 0 0 0-3.572-3.147a2.5 2.5 0 0 0-4.442 0M8.497 7l.724-3.154m3.625 3.014L9.996 9M5.497 7l-.725-3.154M1.147 6.86L3.997 9"
+    //         strokeWidth="1"
+    //       />
+    //     </svg>
+    //   ),
+    // },
     {
       href: "/subscriptions",
       label: "Subscriptions",
@@ -175,21 +155,42 @@ function Sidebar({ isOpen, onClose }) {
         </svg>
       ),
     },
+    // {
+    //   href: "/domain-management",
+    //   label: "Domain Management",
+    //   icon: (
+    //     <svg
+    //       className="w-5 h-5"
+    //       fill="none"
+    //       viewBox="0 0 24 24"
+    //       stroke="currentColor"
+    //     >
+    //       <path
+    //         strokeLinecap="round"
+    //         strokeLinejoin="round"
+    //         strokeWidth={2}
+    //         d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+    //       />
+    //     </svg>
+    //   ),
+    // },
     {
-      href: "/domain-management",
-      label: "Domain Management",
+      href: "/help-tickets",
+      label: "Help Tickets",
       icon: (
         <svg
-          className="w-5 h-5"
-          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
           viewBox="0 0 24 24"
-          stroke="currentColor"
         >
           <path
+            fill="none"
+            stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+            strokeWidth="1.5"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2"
           />
         </svg>
       ),
@@ -233,9 +234,8 @@ function Sidebar({ isOpen, onClose }) {
       )}
 
       <div
-        className={`fixed z-40 inset-y-0 left-0 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
+        className={`fixed z-40 inset-y-0 left-0 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          }`}
       >
         <aside
           className="w-68 h-full border-r transition-colors duration-300 pt-16"
@@ -258,11 +258,10 @@ function Sidebar({ isOpen, onClose }) {
                   <a
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-300 ${
-                      isActive
+                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-300 ${isActive
                         ? "bg-[var(--primary-color)] text-white"
                         : "text-[var(--text-color)] hover:bg-[var(--primary-color)] hover:text-white"
-                    }`}
+                      }`}
                   >
                     {link.icon && (
                       <span className="text-lg flex-shrink-0">{link.icon}</span>

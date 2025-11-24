@@ -8,7 +8,7 @@ import { useBackupStore, useInstancesStore, useAuthStore } from "@/lib/store";
 import logger from "@/lib/logger";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8069";
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8017";
 
 function BackupPage() {
   const [activeTab, setActiveTab] = useState("backup");
@@ -68,12 +68,38 @@ function BackupPage() {
     }
   };
 
-  const handleDownloadBackup = (backupId, filename) => {
+  const handleDownloadBackup = async (backupId, filename) => {
     const { token } = useAuthStore.getState();
-    const url = `${API_BASE_URL}/web/content?model=instance.backup&id=${backupId}&field=backup_file&filename_field=backup_file_name&filename=${filename}&download=true`;
+    const url = `${API_BASE_URL}/api/v1/instances/${selectedInstance.id}/backups/${backupId}/download`;
 
-    // Open in new tab to trigger download
-    window.open(url, "_blank");
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download backup');
+      }
+
+      // Create blob from response
+      const blob = await response.blob();
+
+      // Create download link
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = filename || 'backup.zip';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(a);
+    } catch (error) {
+      logger.error('Download error:', error);
+      alert(`Failed to download backup: ${error.message}`);
+    }
   };
 
   const handleDeleteBackup = async (backupId, backupName) => {
@@ -224,17 +250,16 @@ function BackupPage() {
                   <nav className="flex space-x-1" aria-label="Tabs">
                     <button
                       onClick={() => setActiveTab("backup")}
-                      className={`whitespace-nowrap py-2 px-6 rounded-md font-medium text-sm transition-all duration-300 ${
-                        activeTab === "backup"
-                          ? "bg-[var(--primary-color)] text-white"
-                          : "hover:bg-[var(--primary-color)]20"
-                      }`}
+                      className={`whitespace-nowrap py-2 px-6 rounded-md font-medium text-sm transition-all duration-300 ${activeTab === "backup"
+                        ? "bg-[var(--primary-color)] text-white"
+                        : "hover:bg-[var(--primary-color)]20"
+                        }`}
                       style={
                         activeTab !== "backup"
                           ? {
-                              color: "var(--text-color)",
-                              backgroundColor: "var(--background-secondary)",
-                            }
+                            color: "var(--text-color)",
+                            backgroundColor: "var(--background-secondary)",
+                          }
                           : {}
                       }
                     >
@@ -242,17 +267,16 @@ function BackupPage() {
                     </button>
                     <button
                       onClick={() => setActiveTab("configure")}
-                      className={`whitespace-nowrap py-2 px-6 rounded-md font-medium text-sm transition-all duration-300 ${
-                        activeTab === "configure"
-                          ? "bg-[var(--primary-color)] text-white"
-                          : "hover:bg-[var(--primary-color)]20"
-                      }`}
+                      className={`whitespace-nowrap py-2 px-6 rounded-md font-medium text-sm transition-all duration-300 ${activeTab === "configure"
+                        ? "bg-[var(--primary-color)] text-white"
+                        : "hover:bg-[var(--primary-color)]20"
+                        }`}
                       style={
                         activeTab !== "configure"
                           ? {
-                              color: "var(--text-color)",
-                              backgroundColor: "var(--background-secondary)",
-                            }
+                            color: "var(--text-color)",
+                            backgroundColor: "var(--background-secondary)",
+                          }
                           : {}
                       }
                     >
