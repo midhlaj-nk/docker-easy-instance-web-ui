@@ -2,51 +2,69 @@ import React from "react";
 
 function Slider() {
   return (
-    <div className="sliderbag">
-      <div className="container-fluid cmpad">
-        <div className="pt-10 md:pt-20 pb-38 text-center relative">
-          <span className="absolute top-5 lg:top-18 left-3 lg:-left-40 float">
+    <div className="cmpad relative">
+      <div className="lg:h-screen pt-40 md:pt-30 flex flex-col justify-center">
+        <div className="opacity-80">
+          <span className="absolute top-35 animate-zoom-pulse delay-1 left-[15%]">
+            <img src="/img/icon1.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute top-[38%] left-0 lg:left-[10%] animate-zoom-pulse delay-2">
+            <img src="/img/icon2.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute top-[60%] left-[15%] animate-zoom-pulse delay-3">
+            <img src="/img/icon4.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute bottom-20 animate-zoom-pulse delay-4">
+            <img src="/img/icon5.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute top-35 right-[15%] animate-zoom-pulse delay-5">
+            <img src="/img/icon6.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute top-[38%] right-0 lg:right-[10%] animate-zoom-pulse delay-6">
+            <img src="/img/icon7.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute top-[60%] right-[15%] animate-zoom-pulse delay-7">
+            <img src="/img/icon8.svg" alt="" className="w-10"/>
+          </span>
+          <span className="absolute bottom-20 right-0 animate-zoom-pulse delay-8">
+            <img src="/img/icon9.svg" alt="" className="w-10"/>
+          </span>
+        </div>
+
+        <div className="text-center relative m-auto pb-20 lg:pb-0">
+          {/* <span className="absolute -top-10 lg:-top-5 left-3 lg:-left-40 float">
             <img src="/img/ar1.svg" alt="" className="w-35 md:w-40" />
           </span>
 
-          <span className="absolute right-3 top-5 lg:top-14 lg:-right-40 float">
+          <span className="absolute right-3 -top-8 lg:-top-2 lg:-right-40 float">
             <img src="/img/ar2.svg" alt="" className="w-35 md:w-40" />
           </span>
 
-          <span className="absolute bottom-15 left-3 lg:-left-40 float">
+          <span className="absolute -bottom-4 left-3 lg:-left-40 float">
             <img src="/img/ar3.svg" alt="" className="w-35 md:w-40" />
           </span>
 
-          <span className="absolute bottom-10 right-3 lg:-right-40 float">
+          <span className="absolute -bottom-5 right-3 lg:-right-40 float">
             <img src="/img/ar4.svg" alt="" className="w-35 md:w-40" />
-          </span>
+          </span> */}
 
           <span className="hidden md:inline-block px-5 py-2 bg-[#ffc98f] text-black rounded-full text-[13px]">
-            Bring your ideas to life
+            Accelerate your business
           </span>
-          <h1 className="text-4xl md:text-5xl leading-tight font-semibold mb-3 mt-8">
-            Launch Your{" "}
-            <span className="inline-flex items-center w-[120px] md:w-[135px] relative top-[3px]">
-              <img
-                src="/logo/odoo-logo.svg"
-                alt="Odoo"
-                className="h-[1em] w-auto" // matches text height
-              />
-            </span>{" "}
-            in Seconds
-            <br />
-            Scale <span className="text-[var(--primary-color)]">
-              Without
-            </span>{" "}
-            Limits.
+          <h1 className="yara-font text-5xl leading-tight font-semibold mb-3 mt-8">
+            Transform your{" "}
+            <span className="text-[var(--primary-color)]">business</span> with{" "}
+            <span className="text-[55px] odoocircle">
+              <span className="text-[#714B67]">o</span>
+              <span className="text-[#8F8F8F]">doo</span>
+            </span>
           </h1>
-
           <p className="max-w-2xl mx-auto text-[#58586b] leading-relaxed">
             Set up Odoo in just seconds. Enjoy effortless scalability, automatic
             updates, and reliable cloud performance so you can focus on growing
             your business.
           </p>
-          <div className="flex justify-center gap-2 mt-10">
+          <div className="flex flex-wrap justify-center gap-2 mt-10">
             <a
               href=""
               className="w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
@@ -59,6 +77,38 @@ function Slider() {
             >
               Our Features
             </a>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 text-center max-w-[90%] m-auto">
+          <div className="p-5">
+            <img src="/img/efficiency.svg" alt="" className="w-8 m-auto pb-5" />
+            <h5 className="text-md font-medium mb-2">Efficiency</h5>
+            <p className="text-sm max-w-[280px]">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit
+            </p>
+          </div>
+          <div className="lg:border-l-1 lg:border-r-1 border-gray-200 p-5">
+            <img
+              src="/img/scalability.svg"
+              alt=""
+              className="w-8 m-auto pb-5"
+            />
+            <h5 className="text-md font-medium mb-2">Scalability</h5>
+            <p className="text-sm max-w-[280px]">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit
+            </p>
+          </div>
+          <div className="p-5">
+            <img
+              src="/img/collaboration.svg"
+              alt=""
+              className="w-8 m-auto pb-5"
+            />
+            <h5 className="text-md font-medium mb-2">Collaboration</h5>
+            <p className="text-sm max-w-[280px]">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit
+            </p>
           </div>
         </div>
       </div>

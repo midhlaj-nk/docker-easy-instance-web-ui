@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Image from "next/image";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -24,18 +24,15 @@ function Header() {
     };
   }, []);
 
-
   return (
     <div>
-      <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          isActive ? "bg-white [box-shadow:0px_0px_20px_rgb(102_103_171_/_10%)]" : " [box-shadow:0px_0px_0px_rgb(102_103_171_/_0%)] bg-[unset]"
-        }`}
-      >
+      <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 ">
         <div className="container-fluid cmpad">
-          <div className={`bg-white flex gap-6 justify-between items-center rounded-full [box-shadow:0px_0px_20px_rgb(102_103_171_/_3%)] transition-all duration-300 ${isActive ? "h-15 mt-0" : "h-18 mt-3 p-4"}`}>
+          <div
+            className="mt-3 bg-white p-4 border border-[#5355ce14] flex gap-6 justify-between items-center rounded-full [box-shadow:0px_0px_20px_rgb(102_103_171_/_20%)] transition-all duration-300"
+          >
             <a href="/" className="xl:w-1/3 sm:pl-1">
-              <Image src="/logo/logo1.svg" alt="Logo" width={140} height={30} />
+              <Image src="/logo/logo.svg" alt="Logo" width={240} height={30} />
             </a>
 
             {/* Desktop Nav */}
@@ -111,7 +108,17 @@ function Header() {
               className="lg:hidden text-[var(--primary-color)] inline-flex items-center justify-center w-10 h-10 rounded-full border border-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white transition duration-300"
               onClick={() => setIsMobileOpen((v) => !v)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
@@ -121,31 +128,57 @@ function Header() {
           {/* Mobile menu panel with animation */}
           <div
             className={`lg:hidden bg-white rounded-2xl overflow-hidden transform transition-all duration-300 ${
-              isMobileOpen ? "mt-2 opacity-100 translate-y-0 max-h-[420px]" : "mt-0 opacity-0 -translate-y-2 max-h-0 pointer-events-none"
+              isMobileOpen
+                ? "mt-2 opacity-100 translate-y-0 max-h-[420px]"
+                : "mt-0 opacity-0 -translate-y-2 max-h-0 pointer-events-none"
             }`}
           >
             <div className="p-4">
               <ul className="space-y-3 text-[15px] text-left">
                 <li>
-                  <a href="/about" className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]">About Us</a>
+                  <a
+                    href="/about"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    About Us
+                  </a>
                 </li>
                 <li>
-                  <a href="/services" className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]">Our Services</a>
+                  <a
+                    href="/services"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    Our Services
+                  </a>
                 </li>
                 <li>
-                  <a href="/features" className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]">Features</a>
+                  <a
+                    href="/features"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    Features
+                  </a>
                 </li>
                 <li>
-                  <a href="/blogs" className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]">Blogs</a>
+                  <a
+                    href="/blogs"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    Blogs
+                  </a>
                 </li>
                 <li>
-                  <a href="/contact" className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]">Contact Us</a>
+                  <a
+                    href="/contact"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    Contact Us
+                  </a>
                 </li>
               </ul>
               <a
                 href="#"
                 className="mt-4 w-full inline-flex justify-center px-6 py-3 bg-[var(--primary-color)] text-white rounded-full items-center hover:bg-[#454685] transition duration-300"
-              
               >
                 Let’s Go
               </a>

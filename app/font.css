@@ -1,0 +1,192 @@
+@font-face {
+    font-family: 'Yaro St';
+    src: url('/fonts/YaroSt-Thin.eot');
+    src: local('Yaro St Thin'), local('YaroSt-Thin'),
+        url('/fonts/YaroSt-Thin.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroSt-Thin.woff2') format('woff2'),
+        url('/fonts/YaroSt-Thin.woff') format('woff'),
+        url('/fonts/YaroSt-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Cut';
+    src: url('/fonts/YaroCut-Black.eot');
+    src: local('Yaro Cut Black'), local('YaroCut-Black'),
+        url('/fonts/YaroCut-Black.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroCut-Black.woff2') format('woff2'),
+        url('/fonts/YaroCut-Black.woff') format('woff'),
+        url('/fonts/YaroCut-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro St';
+    src: url('/fonts/YaroSt.eot');
+    src: local('Yaro St'), local('YaroSt'),
+        url('/fonts/YaroSt.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroSt.woff2') format('woff2'),
+        url('/fonts/YaroSt.woff') format('woff'),
+        url('/fonts/YaroSt.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro St';
+    src: url('/fonts/YaroSt-Black.eot');
+    src: local('Yaro St Black'), local('YaroSt-Black'),
+        url('/fonts/YaroSt-Black.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroSt-Black.woff2') format('woff2'),
+        url('/fonts/YaroSt-Black.woff') format('woff'),
+        url('/fonts/YaroSt-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Rg';
+    src: url('/fonts/YaroRg.eot');
+    src: local('Yaro Rg'), local('YaroRg'),
+        url('/fonts/YaroRg.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroRg.woff2') format('woff2'),
+        url('/fonts/YaroRg.woff') format('woff'),
+        url('/fonts/YaroRg.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Rg';
+    src: url('/fonts/YaroRg-Thin.eot');
+    src: local('Yaro Rg Thin'), local('YaroRg-Thin'),
+        url('/fonts/YaroRg-Thin.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroRg-Thin.woff2') format('woff2'),
+        url('/fonts/YaroRg-Thin.woff') format('woff'),
+        url('/fonts/YaroRg-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Rg';
+    src: url('/fonts/YaroRg-Bold.eot');
+    src: local('Yaro Rg Bold'), local('YaroRg-Bold'),
+        url('/fonts/YaroRg-Bold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroRg-Bold.woff2') format('woff2'),
+        url('/fonts/YaroRg-Bold.woff') format('woff'),
+        url('/fonts/YaroRg-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Op';
+    src: url('/fonts/YaroOp-Bold.eot');
+    src: local('Yaro Op Bold'), local('YaroOp-Bold'),
+        url('/fonts/YaroOp-Bold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroOp-Bold.woff2') format('woff2'),
+        url('/fonts/YaroOp-Bold.woff') format('woff'),
+        url('/fonts/YaroOp-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro St';
+    src: url('/fonts/YaroSt-Bold.eot');
+    src: local('Yaro St Bold'), local('YaroSt-Bold'),
+        url('/fonts/YaroSt-Bold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroSt-Bold.woff2') format('woff2'),
+        url('/fonts/YaroSt-Bold.woff') format('woff'),
+        url('/fonts/YaroSt-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Op';
+    src: url('/fonts/YaroOp-Black.eot');
+    src: local('Yaro Op Black'), local('YaroOp-Black'),
+        url('/fonts/YaroOp-Black.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroOp-Black.woff2') format('woff2'),
+        url('/fonts/YaroOp-Black.woff') format('woff'),
+        url('/fonts/YaroOp-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Cut';
+    src: url('/fonts/YaroCut-Thin.eot');
+    src: local('Yaro Cut Thin'), local('YaroCut-Thin'),
+        url('/fonts/YaroCut-Thin.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroCut-Thin.woff2') format('woff2'),
+        url('/fonts/YaroCut-Thin.woff') format('woff'),
+        url('/fonts/YaroCut-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Op';
+    src: url('/fonts/YaroOp-Thin.eot');
+    src: local('Yaro Op Thin'), local('YaroOp-Thin'),
+        url('/fonts/YaroOp-Thin.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroOp-Thin.woff2') format('woff2'),
+        url('/fonts/YaroOp-Thin.woff') format('woff'),
+        url('/fonts/YaroOp-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Rg';
+    src: url('/fonts/YaroRg-Black.eot');
+    src: local('Yaro Rg Black'), local('YaroRg-Black'),
+        url('/fonts/YaroRg-Black.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroRg-Black.woff2') format('woff2'),
+        url('/fonts/YaroRg-Black.woff') format('woff'),
+        url('/fonts/YaroRg-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Cut';
+    src: url('/fonts/YaroCut-Bold.eot');
+    src: local('Yaro Cut Bold'), local('YaroCut-Bold'),
+        url('/fonts/YaroCut-Bold.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroCut-Bold.woff2') format('woff2'),
+        url('/fonts/YaroCut-Bold.woff') format('woff'),
+        url('/fonts/YaroCut-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Cut';
+    src: url('/fonts/YaroCut.eot');
+    src: local('Yaro Cut'), local('YaroCut'),
+        url('/fonts/YaroCut.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroCut.woff2') format('woff2'),
+        url('/fonts/YaroCut.woff') format('woff'),
+        url('/fonts/YaroCut.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yaro Op';
+    src: url('/fonts/YaroOp.eot');
+    src: local('Yaro Op'), local('YaroOp'),
+        url('/fonts/YaroOp.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/YaroOp.woff2') format('woff2'),
+        url('/fonts/YaroOp.woff') format('woff'),
+        url('/fonts/YaroOp.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
