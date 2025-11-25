@@ -9,9 +9,9 @@ function Footer() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 ">
             <div className="col-span-12 md:col-span-4 text-center md:text-left">
               <img
-                src="/logo/logo1.svg"
+                src="/logo/logo.svg"
                 alt=""
-                className="w-40 mb-5 mx-auto md:mx-0"
+                className="w-60 mb-5 mx-auto md:mx-0"
               />
               <p className="brand-description mx-auto md:mx-0">
                 Turpis tortor nunc sed amet at faucibus vitae morbi congue sed

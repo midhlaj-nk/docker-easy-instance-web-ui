@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Header/>
       <Slider/>
-      <TwoBox/>
+      {/* <TwoBox/> */}
       <Features/>
       <Pricing/>
       <Faq/>
