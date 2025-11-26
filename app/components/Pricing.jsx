@@ -63,12 +63,44 @@ function Pricing() {
   }, []);
 
   const formatPrice = (price, currency = 'USD') => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
+    if (!price && price !== 0) {
+      return { number: '0', symbol: '$', currency: 'USD' };
+    }
+    
+    // Format number with proper locale (handles thousands separators)
+    const formattedNumber = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(price);
+    
+    // Get currency symbol based on currency code
+    const currencySymbols = {
+      'USD': '$',
+      'EUR': '€',
+      'GBP': '£',
+      'JPY': '¥',
+      'INR': '₹',
+      'CAD': 'C$',
+      'AUD': 'A$',
+      'CHF': 'CHF',
+      'CNY': '¥',
+      'SGD': 'S$',
+      'MXN': 'MX$',
+      'BRL': 'R$',
+      'ZAR': 'R',
+      'KRW': '₩',
+      'THB': '฿',
+    };
+    
+    // If currency is already a symbol (like "$"), use it directly
+    // Otherwise, look it up in the map
+    const symbol = currencySymbols[currency?.toUpperCase()] || currency || '$';
+    
+    return { 
+      number: formattedNumber, 
+      symbol: symbol, 
+      currency: currency || 'USD' 
+    };
   };
 
   const formatPeriod = (billingPeriod, billingPeriodType) => {
@@ -144,7 +176,7 @@ function Pricing() {
                     'Support Automated Renewal'
                   ].filter(Boolean);
 
-              const price = formatPrice(plan.price, plan.currency);
+              const priceData = formatPrice(plan.price, plan.currency);
               const period = formatPeriod(plan.billing_period, plan.billing_period_type);
               const description = stripHtml(plan.description) || 'Premium plan with enhanced features and higher user capacity.';
               const isFeatured = plan.is_featured || plan.is_popular;
@@ -156,7 +188,8 @@ function Pricing() {
                   )}
                   <div className="price-container">
                     <div className="price">
-                      {price.replace(/\$/, '')}
+                      <span className="price-currency">{priceData.symbol}</span>
+                      <span className="price-amount">{priceData.number}</span>
                       <span className="price-period">{period}</span>
                     </div>
                   </div>

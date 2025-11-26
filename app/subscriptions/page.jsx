@@ -9,6 +9,38 @@ import { useAuthStore } from '@/lib/store';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://web.easyinstance.com';
 
+// Currency symbol mapping
+const getCurrencySymbol = (currency = 'USD') => {
+  const currencySymbols = {
+    'USD': '$',
+    'EUR': '€',
+    'GBP': '£',
+    'JPY': '¥',
+    'INR': '₹',
+    'CAD': 'C$',
+    'AUD': 'A$',
+    'CHF': 'CHF',
+    'CNY': '¥',
+    'SGD': 'S$',
+    'MXN': 'MX$',
+    'BRL': 'R$',
+    'ZAR': 'R',
+    'KRW': '₩',
+    'THB': '฿',
+  };
+  return currencySymbols[currency?.toUpperCase()] || currency || '$';
+};
+
+// Format price with currency symbol
+const formatPriceWithCurrency = (price, currency = 'USD') => {
+  if (!price && price !== 0) return '0';
+  const formattedNumber = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(price);
+  return `${getCurrencySymbol(currency)}${formattedNumber}`;
+};
+
 function SubscriptionsPage({ selectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [plans, setPlans] = useState([]);
@@ -257,7 +289,7 @@ function SubscriptionsPage({ selectedInstance }) {
                       </div>
                       <div>
                         <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
-                          <strong>Amount:</strong> {currentSubscription.currency} {currentSubscription.amount_total}
+                          <strong>Amount:</strong> {formatPriceWithCurrency(currentSubscription.amount_total, currentSubscription.currency)}
                         </p>
                         <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
                           <strong>Payment Status:</strong> <span className="font-medium text-green-600">
@@ -362,7 +394,7 @@ function SubscriptionsPage({ selectedInstance }) {
                           </span>
                         </div>
                         <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
-                          <strong>Amount:</strong> {sub.currency} {sub.amount_total}
+                          <strong>Amount:</strong> {formatPriceWithCurrency(sub.amount_total, sub.currency)}
                         </p>
                         {sub.invoice_id && (
                           <div className="mt-3">
@@ -461,7 +493,10 @@ function SubscriptionsPage({ selectedInstance }) {
                       
                       <div className="flex items-baseline mb-4">
                         <h2 className="text-3xl font-bold" style={{ color: 'var(--text-color)' }}>
-                          {plan.currency} {plan.price}
+                          {getCurrencySymbol(plan.currency)}{new Intl.NumberFormat('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(plan.price)}
                         </h2>
                         <span className="ml-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                           /{plan.billing_period} {plan.billing_period_type}
