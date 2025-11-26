@@ -6,36 +6,21 @@ import withInstanceGuard from "../components/withInstanceGuard";
 import { useGitStore } from "@/lib/store";
 import { useInstancesStore } from "@/lib/store";
 
-// SweetAlert2 will be loaded dynamically when needed
-
 function GitManagerPage({ selectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [newCollaborator, setNewCollaborator] = useState("");
   const [showPermissions, setShowPermissions] = useState(false);
   const [adminPermission, setAdminPermission] = useState(false);
 
-  // Function to dynamically load SweetAlert2
-  const loadSweetAlert = async () => {
-    if (typeof window !== "undefined" && !window.Swal) {
-      try {
-        const Swal = await import(
-          "https://cdn.jsdelivr.net/npm/sweetalert2@11"
-        );
-        window.Swal = Swal.default;
-      } catch (error) {
-        console.error("Failed to load SweetAlert2:", error);
-      }
-    }
-  };
-
-  // Helper function to show SweetAlert2 with dynamic loading
-  const showAlert = async (options) => {
-    await loadSweetAlert();
-    if (typeof window !== "undefined" && window.Swal) {
-      window.Swal.fire(options);
+  // Helper function to show alerts (using browser's native confirm/alert)
+  const showAlert = (options) => {
+    const message = (options.title ? options.title + '\n\n' : '') + (options.text || '');
+    
+    if (options.icon === 'warning' || options.icon === 'question') {
+      return window.confirm(message);
     } else {
-      // Fallback to regular alert
-      alert(options.text || options.title || "Alert");
+      window.alert(message);
+      return true;
     }
   };
   const [permissions, setPermissions] = useState({
@@ -91,9 +76,7 @@ function GitManagerPage({ selectedInstance }) {
 
   const handleAddCollaborator = async () => {
     if (!newCollaborator.trim()) {
-      // Show SweetAlert2 warning
-      await showAlert({
-        color: "#F3F3F3",
+      showAlert({
         icon: "warning",
         title: "Username Required",
         text: "Please enter a GitHub username.",
@@ -110,9 +93,7 @@ function GitManagerPage({ selectedInstance }) {
     }
 
     if (selectedPerms.length === 0) {
-      // Show SweetAlert2 warning
-      await showAlert({
-        color: "#F3F3F3",
+      showAlert({
         icon: "warning",
         title: "Permissions Required",
         text: "Please select at least one permission.",
@@ -133,17 +114,15 @@ function GitManagerPage({ selectedInstance }) {
       setAdminPermission(false);
       fetchCollaborators(selectedInstance.id);
 
-      // Show SweetAlert2 success
-      await showAlert({
-        color: "#F3F3F3",
+      // Show success message
+      showAlert({
         icon: "success",
         title: "Success",
         text: result.data?.msg || "Collaborator added successfully!",
       });
     } else {
-      // Show SweetAlert2 error
-      await showAlert({
-        color: "#F3F3F3",
+      // Show error message
+      showAlert({
         icon: "error",
         title: "Error",
         text: result.data?.msg || result.error || "Failed to add collaborator",
@@ -152,12 +131,24 @@ function GitManagerPage({ selectedInstance }) {
   };
 
   const handleRemoveCollaborator = async (username) => {
+    const confirmed = showAlert({
+      icon: "question",
+      title: "Remove Collaborator",
+      text: `Are you sure you want to remove ${username} as a collaborator?`,
+    });
+    
+    if (!confirmed) return;
+    
     const result = await removeCollaborator(selectedInstance.id, username);
     if (result.success) {
       fetchCollaborators(selectedInstance.id);
+      showAlert({
+        icon: "success",
+        title: "Success",
+        text: "Collaborator removed successfully!",
+      });
     } else {
-      await showAlert({
-        color: "#F3F3F3",
+      showAlert({
         icon: "error",
         title: "Error",
         text: result.error || "Failed to remove collaborator",
@@ -166,6 +157,14 @@ function GitManagerPage({ selectedInstance }) {
   };
 
   const handleRemoveInvitation = async (username, invitationId) => {
+    const confirmed = showAlert({
+      icon: "question",
+      title: "Cancel Invitation",
+      text: `Are you sure you want to cancel the invitation for ${username}?`,
+    });
+    
+    if (!confirmed) return;
+    
     const result = await removeInvitation(
       selectedInstance.id,
       username,
@@ -173,9 +172,13 @@ function GitManagerPage({ selectedInstance }) {
     );
     if (result.success) {
       fetchCollaborators(selectedInstance.id);
+      showAlert({
+        icon: "success",
+        title: "Success",
+        text: "Invitation cancelled successfully!",
+      });
     } else {
-      await showAlert({
-        color: "#F3F3F3",
+      showAlert({
         icon: "error",
         title: "Error",
         text: result.error || "Failed to remove invitation",
