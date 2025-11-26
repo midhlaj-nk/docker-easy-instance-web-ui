@@ -1,7 +1,13 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://web.easyinstance.com';
 
 function Pricing() {
+  const router = useRouter();
+  const [plans, setPlans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const logos = [
     "/img/plane.webp",
     "/img/wordpress.png",
@@ -23,6 +29,81 @@ function Pricing() {
 
   const marqueeLogos = [...logos, ...logos];
 
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        // Fetch plans without authentication for public pricing page
+        // Only show plans marked for website display
+        const response = await fetch(`${API_BASE_URL}/api/v1/subscription-plans?show_in_website=true`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        if (data.data?.plans) {
+          // Sort by sequence, then by name
+          const sortedPlans = data.data.plans.sort((a, b) => {
+            if (a.sequence !== b.sequence) {
+              return a.sequence - b.sequence;
+            }
+            return a.name.localeCompare(b.name);
+          });
+          setPlans(sortedPlans);
+        }
+      } catch (error) {
+        console.error('Error fetching subscription plans:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  const formatPrice = (price, currency = 'USD') => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const formatPeriod = (billingPeriod, billingPeriodType) => {
+    const periodType = billingPeriodType || 'month';
+    const period = billingPeriod || 1;
+    
+    if (period === 1) {
+      const typeMap = {
+        'day': 'Day',
+        'week': 'Week',
+        'month': 'Month',
+        'year': 'Year'
+      };
+      return `/${typeMap[periodType] || 'Month'}`;
+    }
+    
+    const typeMap = {
+      'day': 'Days',
+      'week': 'Weeks',
+      'month': 'Months',
+      'year': 'Years'
+    };
+    return `/${period} ${typeMap[periodType] || 'Months'}`;
+  };
+
+  const stripHtml = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '').trim();
+  };
+
+  const handleSubscribe = (plan) => {
+    // Redirect to login, then to subscriptions page
+    router.push('/login?redirect=/subscriptions');
+  };
+
   return (
     <div className="bg-white text-center">
       <div className="container-fluid cmpad py-10 lg:py-20">
@@ -42,125 +123,65 @@ function Pricing() {
           View All Plans
         </a>
         <div className="pricing-container">
-          {/* Weekly Classic */}
-          <div className="pricing-card">
-            <div className="price-container">
-              <div className="price">
-                $14
-                <span className="price-period">/Week</span>
-              </div>
+          {isLoading ? (
+            <div className="text-center py-8 text-[#58586b]">
+              Loading plans...
             </div>
-            <h5 className="font-semibold text-[18px] mb-2">Weekly Classic</h5>
-            <p className="plan-subtitle">
-              Simple weekly access with essential features and limited users.
-            </p>
-
-            <ul className="features-list">
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">1 Custom Addons</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">2 Users</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">Free Domain Mapping</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">GitHub Integration</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">Support Automated Renewal</span>
-              </li>
-            </ul>
-
-            <button className="cta-button">Subscribe</button>
-          </div>
-
-          {/* Weekly Premium */}
-          <div className="pricing-card featured">
-            <div className="save-badge">Best Value</div>
-            <div className="price-container">
-              <div className="price">
-                $37
-                <span className="price-period">/Week</span>
-              </div>
+          ) : plans.length === 0 ? (
+            <div className="text-center py-8 text-[#58586b]">
+              No plans available at the moment.
             </div>
-            <h5 className="font-semibold text-[18px] mb-2">Weekly Premium</h5>
-            <p className="plan-subtitle">
-              Premium weekly access with enhanced features and higher user
-              capacity.
-            </p>
+          ) : (
+            plans.map((plan) => {
+              // Build features list from features_list or default features
+              const features = plan.features_list && plan.features_list.length > 0
+                ? plan.features_list
+                : [
+                    plan.enable_custom_addons ? 'Custom Addons' : null,
+                    plan.max_users > 0 ? `${plan.max_users} Users` : 'Unlimited Users',
+                    'Free Domain Mapping',
+                    plan.enable_github_integration ? 'GitHub Integration' : null,
+                    'Support Automated Renewal'
+                  ].filter(Boolean);
 
-            <ul className="features-list">
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">1 Custom Addons</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">5 Users</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">Free Domain Mapping</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">GitHub Integration</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">Support Automated Renewal</span>
-              </li>
-            </ul>
+              const price = formatPrice(plan.price, plan.currency);
+              const period = formatPeriod(plan.billing_period, plan.billing_period_type);
+              const description = stripHtml(plan.description) || 'Premium plan with enhanced features and higher user capacity.';
+              const isFeatured = plan.is_featured || plan.is_popular;
 
-            <button className="cta-button featured">Subscribe</button>
-          </div>
+              return (
+                <div key={plan.id} className={`pricing-card ${isFeatured ? 'featured' : ''}`}>
+                  {isFeatured && (
+                    <div className="save-badge">Best Value</div>
+                  )}
+                  <div className="price-container">
+                    <div className="price">
+                      {price.replace(/\$/, '')}
+                      <span className="price-period">{period}</span>
+                    </div>
+                  </div>
+                  <h5 className="font-semibold text-[18px] mb-2">{plan.name}</h5>
+                  <p className="plan-subtitle">{description}</p>
 
-          {/* Monthly Classic */}
-          <div className="pricing-card">
-            <div className="price-container">
-              <div className="price">
-                $54
-                <span className="price-period">/Month</span>
-              </div>
-            </div>
-            <h5 className="font-semibold text-[18px] mb-2">Monthly Classic</h5>
-            <p className="plan-subtitle">
-              Cost-effective monthly plan with essential features and custom
-              addons.
-            </p>
+                  <ul className="features-list">
+                    {features.map((feature, index) => (
+                      <li key={index} className="feature-item">
+                        <div className="feature-icon included">✓</div>
+                        <span className="feature-text">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-            <ul className="features-list">
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">1 Custom Addons</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">3 Users</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">Free Domain Mapping</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">GitHub Integration</span>
-              </li>
-              <li className="feature-item">
-                <div className="feature-icon included">✓</div>
-                <span className="feature-text">Support Automated Renewal</span>
-              </li>
-            </ul>
-
-            <button className="cta-button">Subscribe</button>
-          </div>
+                  <button 
+                    className={`cta-button ${isFeatured ? 'featured' : ''}`}
+                    onClick={() => handleSubscribe(plan)}
+                  >
+                    Subscribe
+                  </button>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
       <div className="container-fluid cmpad py-10 lg:py-20">

@@ -16,27 +16,27 @@ function MetricsPage({ selectedInstance }) {
   };
 
   return (
-    <div>
-      <div className="bg-slate-50 transition-colors duration-300 min-h-screen">
+    <div className="dashboard-theme">
+      <div className="bg-[var(--background)] transition-colors duration-300 min-h-screen font-sans">
         <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
         <div className="flex pt-16">
           <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-          <main className="flex-1 lg:pl-[17rem] p-6">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-6">
+          <main className="flex-1 lg:pl-72 pt-8 px-6 pb-10 transition-all duration-300">
+            <div className="container-custom mx-auto animate-fade-in">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-800">Metrics Panel</h1>
-                  <p className="text-gray-500 mt-1">Performance monitoring for {selectedInstance?.name}</p>
+                  <h1 className="text-3xl font-bold text-[var(--text-color)] tracking-tight">Metrics Panel</h1>
+                  <p className="text-[var(--text-secondary)] mt-1">Performance monitoring for {selectedInstance?.name}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 bg-white p-1 rounded-lg border border-gray-200 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 bg-[var(--background-secondary)] p-1 rounded-lg border border-[var(--border-color)] shadow-sm">
                     <button
                       onClick={() => setViewMode("live")}
                       className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === "live"
-                          ? "bg-blue-50 text-blue-700 shadow-sm"
-                          : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-[var(--input-bg)] text-[var(--primary-color)] shadow-sm"
+                        : "text-[var(--text-secondary)] hover:text-[var(--text-color)]"
                         }`}
                     >
                       <span className="flex items-center gap-2">
@@ -47,8 +47,8 @@ function MetricsPage({ selectedInstance }) {
                     <button
                       onClick={() => setViewMode("history")}
                       className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === "history"
-                          ? "bg-blue-50 text-blue-700 shadow-sm"
-                          : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-[var(--input-bg)] text-[var(--primary-color)] shadow-sm"
+                        : "text-[var(--text-secondary)] hover:text-[var(--text-color)]"
                         }`}
                     >
                       History
@@ -59,10 +59,10 @@ function MetricsPage({ selectedInstance }) {
                       onClick={() => {
                         window.open(selectedInstance.instance_url, '_blank', 'noopener,noreferrer');
                       }}
-                      className="px-4 py-2 rounded-md text-sm font-medium transition-all bg-blue-600 text-white hover:bg-blue-700 shadow-sm flex items-center gap-2"
+                      className="btn-primary flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 px-6 py-2.5"
                     >
                       <svg
-                        className="w-4 h-4"
+                        className="w-5 h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ function MetricsPage({ selectedInstance }) {
                           d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                         />
                       </svg>
-                      Connect
+                      <span className="font-semibold tracking-wide">Connect</span>
                     </button>
                   )}
                 </div>

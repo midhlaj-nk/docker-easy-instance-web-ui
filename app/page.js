@@ -8,15 +8,14 @@ import TwoBox from "./components/TwoBox";
 
 export default function Home() {
   return (
-    <>
-      <Header/>
-      <Slider/>
+    <div className="bg-white min-h-screen">
+      <Header />
+      <Slider />
       {/* <TwoBox/> */}
-      <Features/>
-      <Pricing/>
-      <Faq/>
-      <Footer/>
-      
-    </>
+      <Features />
+      <Pricing />
+      <Faq />
+      <Footer />
+    </div>
   );
 }

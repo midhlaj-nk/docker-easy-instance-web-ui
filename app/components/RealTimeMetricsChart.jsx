@@ -73,7 +73,7 @@ export default function RealTimeMetricsChart({ instanceId }) {
         timestamp: 0
     });
 
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8017";
+    const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8017";
 
     useEffect(() => {
         if (!instanceId || !token) return;

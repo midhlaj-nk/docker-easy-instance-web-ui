@@ -1,15 +1,16 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import AuthGuard from '../components/AuthGuard';
 import { useAuthStore } from '@/lib/store';
 import { useInstancesStore } from '@/lib/store';
 import logger from '@/lib/logger';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8017';
 
-function DeployPage() {
+function DeployPageContent() {
   const router = useRouter();
-  const { user, token, isAuthenticated, isInitialized, initialize } = useAuthStore();
+  const { user, token } = useAuthStore();
   const { selectedInstance } = useInstancesStore();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -61,22 +62,9 @@ function DeployPage() {
     { id: 3, title: 'Release Build', description: 'Deploy your project' },
   ];
 
-  // Initialize auth state on mount
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
-  // Redirect if not authenticated (only after initialization)
-  useEffect(() => {
-    // Don't redirect during initial load
-    if (isInitialized && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, isInitialized, router]);
-
   // Load initial data
   useEffect(() => {
-    if (!isAuthenticated || !token) return;
+    if (!token) return;
 
     let isMounted = true;
     const controller = new AbortController();
@@ -988,7 +976,7 @@ function DeployPage() {
                         onClick={handlePrevious}
                         className='cursor-pointer text-[15px] w-35 text-center px-3 py-3 text-[#58586b] bg-[white] border-[#0000001a] border-2 rounded-full hover:bg-[#454685] hover:text-white transition duration-300'
                       >
-                        Prev
+                        Back
                       </button>
 
                       <button
@@ -1013,4 +1001,10 @@ function DeployPage() {
   );
 }
 
-export default DeployPage;
+export default function DeployPage() {
+  return (
+    <AuthGuard>
+      <DeployPageContent />
+    </AuthGuard>
+  );
+}

@@ -259,12 +259,10 @@ body {
 .features-grid::before {
   content: "";
   filter: blur(90px);
-  background: radial-gradient(
-    circle,
-    rgba(255, 165, 0, 0.6) 0%,
-    rgba(255, 69, 0, 0.4) 40%,
-    rgba(0, 0, 0, 0) 70%
-  );
+  background: radial-gradient(circle,
+      rgba(255, 165, 0, 0.6) 0%,
+      rgba(255, 69, 0, 0.4) 40%,
+      rgba(0, 0, 0, 0) 70%);
   border-radius: 50%;
   width: 300px;
   height: 300px;
@@ -278,12 +276,10 @@ body {
 .features-grid::after {
   content: "";
   filter: blur(90px);
-  background: radial-gradient(
-    circle,
-    rgba(0, 100, 255, 0.5) 0%,
-    rgba(138, 43, 226, 0.3) 50%,
-    rgba(0, 0, 0, 0) 70%
-  );
+  background: radial-gradient(circle,
+      rgba(0, 100, 255, 0.5) 0%,
+      rgba(138, 43, 226, 0.3) 50%,
+      rgba(0, 0, 0, 0) 70%);
   border-radius: 50%;
   width: 400px;
   height: 400px;
@@ -365,11 +361,9 @@ body {
   left: 50%;
   width: 200px;
   height: 200px;
-  background: radial-gradient(
-    circle,
-    rgba(74, 121, 222, 0.1) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(74, 121, 222, 0.1) 0%,
+      transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   opacity: 0;
@@ -409,6 +403,7 @@ body {
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0px);
@@ -454,12 +449,10 @@ body {
   left: -100px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 165, 0, 0.6) 0%,
-    rgba(255, 69, 0, 0.4) 40%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(255, 165, 0, 0.6) 0%,
+      rgba(255, 69, 0, 0.4) 40%,
+      transparent 70%);
   border-radius: 50%;
   filter: blur(90px);
   opacity: 0.5;
@@ -472,12 +465,10 @@ body {
   right: -50px;
   width: 400px;
   height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(0, 100, 255, 0.5) 0%,
-    rgba(138, 43, 226, 0.3) 50%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(0, 100, 255, 0.5) 0%,
+      rgba(138, 43, 226, 0.3) 50%,
+      transparent 70%);
   border-radius: 50%;
   filter: blur(90px);
   opacity: 0.5;
@@ -1025,11 +1016,9 @@ body {
 .slider::before,
 .slider::after {
   position: absolute;
-  background-image: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background-image: linear-gradient(to right,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0) 100%);
   content: "";
   height: 100%;
   width: 25%;
@@ -1065,7 +1054,7 @@ body {
 }
 
 /* Duplicate slides for seamless scroll */
-.slide-track > .slide {
+.slide-track>.slide {
   flex-shrink: 0;
 }
 
@@ -2018,6 +2007,7 @@ input::placeholder {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     transform: scale(1);
@@ -2096,12 +2086,10 @@ input::placeholder {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   animation: shimmer 2s infinite;
 }
 
@@ -2148,11 +2136,13 @@ input {
 }
 
 .yara-font {
-  font-family: "Yaro Rg";
+  font-family: var(--primary-font);
 }
+
 .odoocircle {
   position: relative;
 }
+
 .odoocircle::before {
   content: "";
   position: absolute;
@@ -2167,13 +2157,16 @@ input {
   left: -20px;
   z-index: -1;
 }
+
 @keyframes zoomPulse {
   0% {
     transform: scale(0);
   }
+
   50% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(0);
   }
@@ -2188,24 +2181,131 @@ input {
 .delay-1 {
   animation-delay: 0.5s;
 }
+
 .delay-2 {
   animation-delay: 1.2s;
 }
+
 .delay-3 {
   animation-delay: 2s;
 }
+
 .delay-4 {
   animation-delay: 3s;
 }
+
 .delay-5 {
   animation-delay: 0.8s;
 }
+
 .delay-6 {
   animation-delay: 2.5s;
 }
+
 .delay-7 {
   animation-delay: 3.7s;
 }
+
 .delay-8 {
   animation-delay: 1.8s;
+}
+
+/* Dashboard Theme Isolation */
+.dashboard-theme {
+  /* Energetic & Clean Light Mode */
+  --background: #F8F9FC;
+  --background-secondary: #FFFFFF;
+  --text-color: #1A1C23;
+  --text-secondary: #64748B;
+  --primary-color: #6366F1;
+  --primary-hover: #4F46E5;
+  --border-color: #E2E8F0;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --navbar-bg: rgba(255, 255, 255, 0.85);
+  --sidebar-bg: #FFFFFF;
+  --input-bg: #F1F5F9;
+  --success-color: #10B981;
+  --error-color: #EF4444;
+  --warning-color: #F59E0B;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+/* Dark Mode for Dashboard */
+.dark .dashboard-theme,
+.dashboard-theme .dark {
+  --background: #0F172A;
+  --background-secondary: #1E293B;
+  --text-color: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --primary-color: #818CF8;
+  --primary-hover: #6366F1;
+  --border-color: #334155;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --navbar-bg: rgba(15, 23, 42, 0.85);
+  --sidebar-bg: #1E293B;
+  --input-bg: #334155;
+  --success-color: #34D399;
+  --error-color: #F87171;
+  --warning-color: #FBBF24;
+}
+
+/* Dashboard Specific Utilities */
+.dashboard-theme .glass {
+  background: var(--navbar-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-theme .glass-card {
+  background: var(--background-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-theme .glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-theme .btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 9999px;
+  padding: 10px 24px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.2);
+}
+
+.dashboard-theme .btn-primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+  transform: translateY(-1px);
+}
+
+.dashboard-theme .container-custom {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.dashboard-theme .animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

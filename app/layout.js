@@ -1,16 +1,7 @@
-import { Poppins } from "next/font/google";
 import "./globals.css";
-import "./font.css";
+
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./components/ThemeProvider";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // Optimized: Only load used weights
-  display: 'swap', // Improve perceived performance
-  preload: true,
-});
 
 export const metadata = {
   title: {
@@ -38,7 +29,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} antialiased`} suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
         <ThemeProvider>
           <ErrorBoundary>
             {children}

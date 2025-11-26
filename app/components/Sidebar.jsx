@@ -13,8 +13,8 @@ function Sidebar({ isOpen, onClose }) {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
         >
           <path
@@ -30,8 +30,8 @@ function Sidebar({ isOpen, onClose }) {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
+          width="20"
+          height="20"
           viewBox="0 0 56 56"
         >
           <path
@@ -48,8 +48,8 @@ function Sidebar({ isOpen, onClose }) {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
         >
           <g fill="none">
@@ -70,8 +70,8 @@ function Sidebar({ isOpen, onClose }) {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="23"
-          height="23"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
         >
           <path
@@ -87,8 +87,8 @@ function Sidebar({ isOpen, onClose }) {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
         >
           <g fill="none">
@@ -113,35 +113,14 @@ function Sidebar({ isOpen, onClose }) {
         </svg>
       ),
     },
-    // {
-    //   href: "/shell",
-    //   label: "Shell",
-    //   icon: (
-    //     <svg
-    //       xmlns="http://www.w3.org/2000/svg"
-    //       width="22"
-    //       height="22"
-    //       viewBox="0 0 14 14"
-    //     >
-    //       <path
-    //         fill="none"
-    //         stroke="currentColor"
-    //         strokeLinecap="round"
-    //         strokeLinejoin="round"
-    //         d="M9.497 11.5v1a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1m.278-7.649a2.5 2.5 0 0 0-3.572 3.147q-.187.241-.345.47c-.572.829-.202 1.898.678 2.388l2.96 1.644h5.047l2.924-1.642c.875-.49 1.242-1.557.672-2.383a10 10 0 0 0-.35-.477a2.5 2.5 0 0 0-3.572-3.147a2.5 2.5 0 0 0-4.442 0M8.497 7l.724-3.154m3.625 3.014L9.996 9M5.497 7l-.725-3.154M1.147 6.86L3.997 9"
-    //         strokeWidth="1"
-    //       />
-    //     </svg>
-    //   ),
-    // },
     {
       href: "/subscriptions",
       label: "Subscriptions",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
         >
           <path
@@ -155,33 +134,14 @@ function Sidebar({ isOpen, onClose }) {
         </svg>
       ),
     },
-    // {
-    //   href: "/domain-management",
-    //   label: "Domain Management",
-    //   icon: (
-    //     <svg
-    //       className="w-5 h-5"
-    //       fill="none"
-    //       viewBox="0 0 24 24"
-    //       stroke="currentColor"
-    //     >
-    //       <path
-    //         strokeLinecap="round"
-    //         strokeLinejoin="round"
-    //         strokeWidth={2}
-    //         d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
-    //       />
-    //     </svg>
-    //   ),
-    // },
     {
       href: "/help-tickets",
       label: "Help Tickets",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
         >
           <path
@@ -201,8 +161,8 @@ function Sidebar({ isOpen, onClose }) {
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
         >
           <g fill="none">
@@ -228,7 +188,7 @@ function Sidebar({ isOpen, onClose }) {
       {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
           onClick={onClose}
         />
       )}
@@ -238,16 +198,11 @@ function Sidebar({ isOpen, onClose }) {
           }`}
       >
         <aside
-          className="w-68 h-full border-r transition-colors duration-300 pt-16"
-          style={{
-            backgroundColor: "var(--sidebar-bg)",
-            borderColor: "var(--border-color)",
-          }}
+          className="w-68 h-full glass border-r border-[var(--border-color)] pt-20"
         >
           <div className="p-6">
             <h1
-              className="text-xl font-bold mb-4 capitalize"
-              style={{ color: "var(--text-color)" }}
+              className="text-xl font-bold mb-6 capitalize truncate text-[var(--text-color)]"
             >
               {selectedInstance?.name || "Easy Instance"}
             </h1>
@@ -258,15 +213,15 @@ function Sidebar({ isOpen, onClose }) {
                   <a
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-300 ${isActive
-                        ? "bg-[var(--primary-color)] text-white"
-                        : "text-[var(--text-color)] hover:bg-[var(--primary-color)] hover:text-white"
+                    className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${isActive
+                      ? "bg-[var(--primary-color)] text-white shadow-md shadow-indigo-500/20"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--input-bg)] hover:text-[var(--text-color)]"
                       }`}
                   >
                     {link.icon && (
-                      <span className="text-lg flex-shrink-0">{link.icon}</span>
+                      <span className={`text-lg flex-shrink-0 ${isActive ? 'text-white' : ''}`}>{link.icon}</span>
                     )}
-                    <span className="font-medium text-[14px]">
+                    <span className="font-medium text-sm">
                       {link.label}
                     </span>
                   </a>

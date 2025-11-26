@@ -21,6 +21,137 @@ function InstanceCard({
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
 
+  // Helper to format dates
+  const formatDate = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return null; // Invalid date
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  // Helper to format uptime
+  const formatUptime = (uptimeValue) => {
+    if (!uptimeValue) return '0d 0h 0m';
+    
+    // If it's already a string with d/h/m, assume it's formatted
+    if (typeof uptimeValue === 'string' && (uptimeValue.includes('d') || uptimeValue.includes('h') || uptimeValue.includes('m'))) {
+      return uptimeValue;
+    }
+    
+    // If it's a number (seconds) or string number, format it
+    const seconds = Number(uptimeValue);
+    if (isNaN(seconds) || seconds <= 0) return '0d 0h 0m';
+    
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    return `${days}d ${hours}h ${minutes}m`;
+  };
+
+  // Helper to format memory (RAM) - converts g/m to GB/MB
+  const formatMemory = (memoryValue) => {
+    if (!memoryValue) return 'N/A';
+    
+    const str = String(memoryValue).trim();
+    const match = str.match(/^([\d.]+)([a-zA-Z]+)$/);
+    
+    if (!match) return memoryValue; // Return as-is if format is unexpected
+    
+    const value = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    
+    // Convert to readable format
+    if (unit === 'g' || unit === 'gb') {
+      return value % 1 === 0 ? `${Math.round(value)} GB` : `${value.toFixed(1)} GB`;
+    } else if (unit === 'm' || unit === 'mb') {
+      return value % 1 === 0 ? `${Math.round(value)} MB` : `${value.toFixed(1)} MB`;
+    } else if (unit === 'k' || unit === 'kb') {
+      return value % 1 === 0 ? `${Math.round(value)} KB` : `${value.toFixed(1)} KB`;
+    }
+    
+    return memoryValue;
+  };
+
+  // Helper to format storage - shows MB until 1GB, then GB
+  const formatStorage = (storageValue) => {
+    if (!storageValue) return '0 MB';
+    
+    // Handle string values like "0Gi", "10Gi", "500Mi", etc.
+    const str = String(storageValue).trim();
+    const match = str.match(/^([\d.]+)([a-zA-Z]+)$/);
+    
+    if (!match) return storageValue; // Return as-is if format is unexpected
+    
+    const value = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    
+    // Convert everything to MB first
+    let valueInMB = 0;
+    if (unit === 'gi' || unit === 'gb') {
+      valueInMB = value * 1024;
+    } else if (unit === 'mi' || unit === 'mb') {
+      valueInMB = value;
+    } else if (unit === 'ki' || unit === 'kb') {
+      valueInMB = value / 1024;
+    } else {
+      // Unknown unit, return as-is
+      return storageValue;
+    }
+    
+    // If less than 1024 MB, show in MB, otherwise show in GB
+    if (valueInMB < 1024) {
+      return `${Math.round(valueInMB)} MB`;
+    } else {
+      const valueInGB = valueInMB / 1024;
+      // Show 1 decimal place for GB if needed, otherwise round
+      return valueInGB % 1 === 0 ? `${Math.round(valueInGB)} GB` : `${valueInGB.toFixed(1)} GB`;
+    }
+  };
+
+  // Helper to get license status text and color
+  const getLicenseStatus = () => {
+    const data = overviewData || {};
+
+    // Check if instance is on trial (no subscription but has trial_end_date)
+    const isTrial = data.is_trial || (data.trial_end_date && !data.subscription_end_date);
+    
+    if (isTrial && data.trial_end_date) {
+      const trialEndDate = new Date(data.trial_end_date);
+      const now = new Date();
+      const daysLeft = Math.ceil((trialEndDate - now) / (1000 * 60 * 60 * 24));
+      
+      if (daysLeft < 0) {
+        return { text: 'Trial Expired', color: 'text-[var(--error-color)]' };
+      } else if (daysLeft === 0) {
+        return { text: 'Trial: Expires today', color: 'text-[var(--warning-color)]' };
+      } else if (daysLeft === 1) {
+        return { text: 'Trial: 1 day left', color: 'text-[var(--warning-color)]' };
+      } else {
+        return { text: `Trial: ${daysLeft} days left`, color: 'text-[var(--warning-color)]' };
+      }
+    }
+
+    // If no trial but has subscription
+    if (data.subscription_end_date) {
+      return { text: `Expires: ${formatDate(data.subscription_end_date)}`, color: 'text-[var(--text-color)]' };
+    }
+
+    // Legacy license expiry field
+    if (licenseExpiry && licenseExpiry !== "false" && licenseExpiry !== "No License") {
+      return { text: licenseExpiry, color: 'text-[var(--text-color)]' };
+    }
+
+    // No subscription and no trial
+    return { text: 'No Subscription', color: 'text-[var(--text-secondary)]' };
+  };
+
+  const licenseStatus = getLicenseStatus();
+
   const handleClick = () => {
     if (isNavigating) return; // Prevent multiple clicks
 
@@ -54,229 +185,136 @@ function InstanceCard({
     // Reset navigation state after a short delay
     setTimeout(() => setIsNavigating(false), 1000);
   };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'deployed': return 'bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white';
+      case 'draft': return 'bg-slate-500 text-white dark:bg-slate-600 dark:text-white';
+      case 'container_created': return 'bg-amber-500 text-white dark:bg-amber-600 dark:text-white';
+      case 'maintenance_required': return 'bg-rose-500 text-white dark:bg-rose-600 dark:text-white';
+      default: return 'bg-slate-500 text-white dark:bg-slate-600 dark:text-white';
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'deployed': return 'Running';
+      case 'draft': return 'Draft';
+      case 'container_created': return 'Onboarding';
+      case 'maintenance_required': return 'Maintenance';
+      default: return 'Unknown';
+    }
+  };
+
   return (
-    <div>
+    <div className="h-full">
       <button
         onClick={handleClick}
         disabled={isNavigating}
-        className={`flex flex-col rounded-xl p-6 border border-transparent hover:border-[var(--primary-color)]
-             transition-all duration-300 w-full text-left cursor-pointer
+        className={`glass-card flex flex-col p-5 w-full text-left cursor-pointer h-full relative overflow-hidden group
              ${isNavigating ? 'opacity-75 cursor-not-allowed' : ''}`}
-        style={{
-          backgroundColor: 'var(--background-secondary)',
-          boxShadow: 'var(--card-shadow)'
-        }}
       >
+        {/* Hover Highlight */}
+        <div className="absolute top-0 left-0 w-1 h-full bg-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
         {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex-1">
-            <div className="flex items-center space-x-2">
-              <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-color)' }}>{name}</h3>
+        <div className="flex items-start justify-between mb-5 w-full">
+          <div className="flex-1 min-w-0 pr-4">
+            <div className="flex items-center space-x-2 mb-1">
+              <h3 className="text-lg font-bold truncate text-[var(--text-color)]">{name}</h3>
               {isNavigating && (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--primary-color)]"></div>
               )}
             </div>
-            <div className="flex items-center space-x-3">
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Version: {version}</span>
-              <div className={`flex items-center px-3 py-1 rounded-2xl ${overviewData?.status === 'deployed' ? 'bg-emerald-500' :
-                  overviewData?.status === 'draft' ? 'bg-gray-500' :
-                    overviewData?.status === 'container_created' ? 'bg-yellow-500' : 'bg-red-500'
-                }`}>
-                <span className="text-xs font-medium text-white">
-                  {overviewData?.status === 'deployed' ? 'Deployed' :
-                    overviewData?.status === 'draft' ? 'Draft' :
-                      overviewData?.status === 'container_created' ? 'Onboarding' :
-                        overviewData?.status === 'maintenance_required' ? 'Maintenance' : 'Unknown'}
-                </span>
-              </div>
+            <div className="flex items-center flex-wrap gap-2">
+              <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-[var(--input-bg)] text-[var(--text-secondary)]">
+                v{version}
+              </span>
             </div>
           </div>
-
-          {/* Logo/Icon */}
-          {overviewData?.logo ? (
-            <div className="w-16 h-16 flex items-center justify-center">
-              <img
-                src={overviewData.logo}
-                alt={`${name} logo`}
-                className="w-full h-full object-contain"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextElementSibling.style.display = 'flex';
-                }}
-              />
-              <div className="w-full h-full items-center justify-center rounded-lg" style={{ display: 'none', backgroundColor: 'var(--input-bg)' }}>
-                <span className="text-2xl font-bold" style={{ color: 'var(--primary-color)' }}>
-                  {name.charAt(0)}
-                </span>
-              </div>
-            </div>
-          ) : logo ? (
-            <div className="text-xl font-bold" style={{ color: 'var(--text-secondary)' }}>{logo}</div>
-          ) : (
-            <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--input-bg)' }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ color: 'var(--text-secondary)' }}
-                width={24}
-                height={24}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M17.5 19a4.5 4.5 0 0 0 0-9 5.5 5.5 0 1 0-9.5 4.5" />
-                <path d="M12 17v.01" />
-                <path d="M9 17v.01" />
-                <path d="M15 17v.01" />
-              </svg>
-            </div>
-          )}
+          {/* Status Badge - Right Side */}
+          <div className={`px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${getStatusColor(overviewData?.status || (deployed ? 'deployed' : 'draft'))}`}>
+            {getStatusLabel(overviewData?.status || (deployed ? 'deployed' : 'draft'))}
+          </div>
         </div>
 
         {/* Uptime */}
-        <div className="mb-6 pb-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
+        <div className="mb-4 pb-4 border-b border-[var(--border-color)] w-full">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Uptime</span>
-            <span className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.uptime || '0d 0h 0m'}</span>
+            <span className="text-sm font-medium text-[var(--text-secondary)]">Uptime</span>
+            <span className="text-sm font-semibold font-mono text-[var(--text-color)]">
+              {formatUptime(overviewData?.uptime || uptime)}
+            </span>
           </div>
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-4 w-full">
           {/* CPU Request */}
-          <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--input-bg)' }}>
-            <div className="flex items-center space-x-2 mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ color: 'var(--primary-color)' }}
-                width={16}
-                height={16}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="4" y="4" width="16" height="16" rx="2" />
-                <rect x="9" y="9" width="6" height="6" />
-                <path d="M15 2v2M9 2v2M15 20v2M9 20v2M2 15h2M2 9h2M20 15h2M20 9h2" />
+          <div className="p-3 rounded-lg bg-[var(--input-bg)] transition-colors group-hover:bg-opacity-80">
+            <div className="flex items-center space-x-1.5 mb-1">
+              <svg className="w-3.5 h-3.5 text-[var(--primary-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
               </svg>
-              <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
-                CPU Request
-              </span>
+              <span className="text-xs font-medium text-[var(--text-secondary)]">CPU</span>
             </div>
-            <p className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.cpu_usage || cpuRequest}</p>
+            <p className="text-sm font-bold text-[var(--text-color)]">{overviewData?.cpu_usage || cpuRequest}</p>
           </div>
 
           {/* Memory Request */}
-          <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--input-bg)' }}>
-            <div className="flex items-center space-x-2 mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ color: 'var(--success-color)' }}
-                width={16}
-                height={16}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <ellipse cx="12" cy="5" rx="9" ry="3" />
-                <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
-                <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" />
+          <div className="p-3 rounded-lg bg-[var(--input-bg)] transition-colors group-hover:bg-opacity-80">
+            <div className="flex items-center space-x-1.5 mb-1">
+              <svg className="w-3.5 h-3.5 text-[var(--success-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
-                Memory Request
-              </span>
+              <span className="text-xs font-medium text-[var(--text-secondary)]">RAM</span>
             </div>
-            <p className="text-lg font-bold" style={{ color: 'var(--text-color)' }}>{overviewData?.memory_usage || memoryRequest}</p>
+            <p className="text-sm font-bold text-[var(--text-color)]">{formatMemory(overviewData?.memory_usage || memoryRequest)}</p>
           </div>
         </div>
 
         {/* Details List */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ color: 'var(--text-secondary)' }}
-                width={16}
-                height={16}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="7" width="18" height="13" rx="2" />
-                <circle cx="7.5" cy="17.5" r="1.5" />
-                <circle cx="16.5" cy="17.5" r="1.5" />
-                <path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2" />
+        <div className="space-y-2 w-full mt-auto">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-2 text-[var(--text-secondary)]">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
               </svg>
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Storage Used</span>
+              <span>Storage</span>
             </div>
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
-              {overviewData?.pvc_used || '0Gi'} - {overviewData?.pvc_available || storageUsed}
+            <span className="font-medium text-[var(--text-color)]">
+              {formatStorage(overviewData?.pvc_used || '0Gi')} <span className="text-[var(--text-secondary)]">/ {formatStorage(overviewData?.pvc_size || overviewData?.pvc_available || storageUsed || '0Gi')}</span>
             </span>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ color: 'var(--text-secondary)' }}
-                width={16}
-                height={16}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-2 text-[var(--text-secondary)]">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Last Backup</span>
+              <span>Backup</span>
             </div>
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
-              {overviewData?.last_backup || lastBackup}
+            <span className="font-medium text-[var(--text-color)]">
+              {(() => {
+                const backupDate = overviewData?.last_backup || lastBackup;
+                if (!backupDate || backupDate === 'No Backup' || backupDate === 'No Backups') {
+                  return 'No Backups';
+                }
+                const formatted = formatDate(backupDate);
+                return formatted || 'No Backups';
+              })()}
             </span>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ color: 'var(--text-secondary)' }}
-                width={16}
-                height={16}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="7.5" cy="15.5" r="3.5" />
-                <path d="M10 15.5h8m-2-2v4" />
-                <path d="M19 15.5a4 4 0 1 0-4-4" />
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-2 text-[var(--text-secondary)]">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>License Expiry</span>
+              <span>License</span>
             </div>
-            <span
-              className="text-sm font-semibold"
-              style={{ color: licenseExpiry === "false" ? 'var(--error-color)' : 'var(--text-color)' }}
-            >
-              {licenseExpiry === "false" ? "No License" : licenseExpiry}
+            <span className={`font-medium ${licenseStatus.color}`}>
+              {licenseStatus.text}
             </span>
           </div>
         </div>
