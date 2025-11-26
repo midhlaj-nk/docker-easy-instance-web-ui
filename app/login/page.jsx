@@ -7,13 +7,11 @@ function LoginPage() {
   const router = useRouter();
   const { login, register, isLoading, error, isAuthenticated, clearError } = useAuthStore();
   
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [formData, setFormData] = useState({
-    login: "",
+    email: "",
     password: "",
     name: "",
-    email: "",
     confirmPassword: "",
   });
   const [formErrors, setFormErrors] = useState({});
@@ -29,7 +27,7 @@ function LoginPage() {
   useEffect(() => {
     clearError();
     setFormErrors({});
-  }, [showForgotPassword, showSignUp]);
+  }, [showSignUp]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,8 +40,10 @@ function LoginPage() {
 
   const validateLoginForm = () => {
     const errors = {};
-    if (!formData.login.trim()) {
-      errors.login = "Email or username is required";
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Email is invalid";
     }
     if (!formData.password) {
       errors.password = "Password is required";
@@ -62,9 +62,6 @@ function LoginPage() {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = "Email is invalid";
     }
-    if (!formData.login.trim()) {
-      errors.login = "Username is required";
-    }
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (formData.password.length < 6) {
@@ -82,7 +79,7 @@ function LoginPage() {
     if (!validateLoginForm()) return;
 
     const result = await login({
-      login: formData.login,
+      login: formData.email, // Backend expects 'login' field but we use email
       password: formData.password,
     });
 
@@ -97,7 +94,7 @@ function LoginPage() {
 
     const result = await register({
       name: formData.name,
-      login: formData.login,
+      login: formData.email, // Use email as login since username is not supported
       email: formData.email,
       password: formData.password,
     });
@@ -107,28 +104,17 @@ function LoginPage() {
     }
   };
 
-  const handleForgotPasswordClick = (e) => {
-    e.preventDefault();
-    setShowForgotPassword(true);
-    setShowSignUp(false);
-  };
-
   const handleSignUpClick = (e) => {
     e.preventDefault();
     setShowSignUp(true);
-    setShowForgotPassword(false);
   };
 
   const handleBackToLoginClick = (e) => {
     e.preventDefault();
-    setShowForgotPassword(false);
     setShowSignUp(false);
   };
 
   const getTitle = () => {
-    if (showForgotPassword) {
-      return { line1: "Password", line2: "Reset!" };
-    }
     if (showSignUp) {
       return { line1: "Welcome", line2: "Aboard!" };
     }
@@ -153,46 +139,7 @@ function LoginPage() {
               </div>
             )}
 
-            {showForgotPassword ? (
-              <>
-                <h5 className="text-2xl font-semibold mb-2">Password Reset</h5>
-                <p className="text-[#999999] text-sm mb-8">
-                  Update your password to secure your<br /> account
-                </p>
-                <label className="text-[#333] text-xs mb-2 font-medium">
-                  New Password
-                </label>
-                <input
-                  className="px-3 py-2 border border-[#e5e7eb] rounded-md mb-3 focus:border-[var(--primary-color)] transition duration-300 outline-0"
-                  type="password"
-                  placeholder="New Password"
-                />
-                <label className="text-[#333] text-xs mb-2 font-medium">
-                  Confirm New Password
-                </label>
-                <input
-                  className="px-3 py-2 border border-[#e5e7eb] rounded-md mb-5 focus:border-[var(--primary-color)] transition duration-300 outline-0"
-                  type="password"
-                  placeholder="Confirm New Password"
-                />
-                <button
-                  onClick={handleBackToLoginClick}
-                  className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 items-center hover:bg-[#454685] transition duration-300"
-                >
-                  Reset Password
-                </button>
-                <p className="text-[#333] text-sm mt-20">
-                  Remembered your password?{" "}
-                  <a
-                    href="#"
-                    onClick={handleBackToLoginClick}
-                    className="text-[var(--primary-color)] cursor-pointer"
-                  >
-                    Login
-                  </a>
-                </p>
-              </>
-            ) : showSignUp ? (
+            {showSignUp ? (
               <form onSubmit={handleSignUp}>
                 <h5 className="text-2xl font-semibold mb-2">Sign Up</h5>
                 <p className="text-[#999999] text-sm mb-8">
@@ -231,23 +178,6 @@ function LoginPage() {
                 />
                 {formErrors.email && (
                   <p className="text-xs text-red-500 mb-3">{formErrors.email}</p>
-                )}
-                
-                <label className="text-[#333] text-xs mb-2 font-medium mt-3">
-                  Username
-                </label>
-                <input
-                  className={`px-3 py-2 border rounded-md mb-1 w-full focus:border-[var(--primary-color)] transition duration-300 outline-0 ${
-                    formErrors.login ? 'border-red-500' : 'border-[#e5e7eb]'
-                  }`}
-                  type="text"
-                  name="login"
-                  value={formData.login}
-                  onChange={handleInputChange}
-                  placeholder="Username"
-                />
-                {formErrors.login && (
-                  <p className="text-xs text-red-500 mb-3">{formErrors.login}</p>
                 )}
                 
                 <label className="text-[#333] text-xs mb-2 font-medium mt-3">
@@ -315,16 +245,16 @@ function LoginPage() {
                 </label>
                 <input
                   className={`px-3 py-2 border rounded-md mb-1 w-full focus:border-[var(--primary-color)] transition duration-300 outline-0 ${
-                    formErrors.login ? 'border-red-500' : 'border-[#e5e7eb]'
+                    formErrors.email ? 'border-red-500' : 'border-[#e5e7eb]'
                   }`}
                   type="email"
                   name="email"
-                  value={formData.login}
+                  value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Email"
                 />
-                {formErrors.login && (
-                  <p className="text-xs text-red-500 mb-3">{formErrors.login}</p>
+                {formErrors.email && (
+                  <p className="text-xs text-red-500 mb-3">{formErrors.email}</p>
                 )}
                 
                 <label className="text-[#333] text-xs mb-2 font-medium mt-3">
@@ -344,18 +274,11 @@ function LoginPage() {
                   <p className="text-xs text-red-500 mb-3">{formErrors.password}</p>
                 )}
                 
-                <div className="flex justify-between text-xs mb-5 text-[#999999] mt-5">
+                <div className="flex justify-start text-xs mb-5 text-[#999999] mt-5">
                   <label className="flex items-center gap-2 cursor-pointer hover:text-[var(--primary-color)] transition duration-300">
                     <input type="checkbox" className="form-checkbox" />
                     <p className="m-0">Remember me</p>
                   </label>
-                  <a
-                    href="#"
-                    onClick={handleForgotPasswordClick}
-                    className="hover:text-[var(--primary-color)] transition duration-300"
-                  >
-                    Forgot Password?
-                  </a>
                 </div>
                 
                 <button

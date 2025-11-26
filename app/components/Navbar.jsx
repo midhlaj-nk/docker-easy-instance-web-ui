@@ -198,11 +198,11 @@ function Navbar({ isSidebarOpen, toggleSidebar }) {
                 aria-label="User profile"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
-                  {user?.name?.charAt(0) || user?.login?.charAt(0) || 'U'}
+                  {user?.name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                 </div>
                 {user && (
                   <span className="hidden md:block text-sm font-medium">
-                    {user.name || user.login}
+                    {user.name || user.email}
                   </span>
                 )}
                 <svg className="w-4 h-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
