@@ -311,17 +311,17 @@ function LoginPage() {
                 </p>
                 
                 <label className="text-[#333] text-xs mb-2 font-medium">
-                  Email or Username
+                  Email
                 </label>
                 <input
                   className={`px-3 py-2 border rounded-md mb-1 w-full focus:border-[var(--primary-color)] transition duration-300 outline-0 ${
                     formErrors.login ? 'border-red-500' : 'border-[#e5e7eb]'
                   }`}
-                  type="text"
-                  name="login"
+                  type="email"
+                  name="email"
                   value={formData.login}
                   onChange={handleInputChange}
-                  placeholder="Email or Username"
+                  placeholder="Email"
                 />
                 {formErrors.login && (
                   <p className="text-xs text-red-500 mb-3">{formErrors.login}</p>
