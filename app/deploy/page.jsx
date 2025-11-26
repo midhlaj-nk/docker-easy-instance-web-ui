@@ -10,7 +10,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:80
 
 function DeployPageContent() {
   const router = useRouter();
-  const { user, token } = useAuthStore();
+  const { user, token, isAuthenticated, isInitialized } = useAuthStore();
   const { selectedInstance } = useInstancesStore();
 
   const [currentStep, setCurrentStep] = useState(1);
