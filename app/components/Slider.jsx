@@ -66,7 +66,7 @@ function Slider() {
           </p>
           <div className="flex flex-wrap justify-center gap-2 mt-10">
             <a
-              href=""
+              href="/login"
               className="w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
             >
               Get Started{" "}

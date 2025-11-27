@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import withInstanceGuard from '../components/withInstanceGuard';
 import { useSettingsStore, useInstancesStore } from '@/lib/store';
+import { showWarning, showError } from '@/lib/swal';
 
 function SettingsPage({ selectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,7 +22,7 @@ function SettingsPage({ selectedInstance }) {
 
   const handleDeleteInstance = async () => {
     if (deleteConfirmText !== selectedInstance.name) {
-      alert('Instance name does not match. Please type the exact instance name to confirm deletion.');
+      await showWarning('Instance name does not match. Please type the exact instance name to confirm deletion.');
       return;
     }
 
@@ -32,7 +33,7 @@ function SettingsPage({ selectedInstance }) {
       setShowDeleteModal(false);
       router.push('/dashboard');
     } else {
-      alert(`Failed to delete instance: ${result.error}`);
+      await showError(`Failed to delete instance: ${result.error}`);
     }
   };
 

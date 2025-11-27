@@ -6,6 +6,7 @@ import withInstanceGuard from "../components/withInstanceGuard";
 import BackupConfigModal from "../components/BackupConfigModal";
 import { useBackupStore, useInstancesStore, useAuthStore } from "@/lib/store";
 import logger from "@/lib/logger";
+import { showSuccess, showError, showConfirm, showDeleteConfirm } from "@/lib/swal";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8017";
@@ -41,11 +42,10 @@ function BackupPage() {
       fetchBackups(selectedInstance.id).catch((err) => {
         logger.error("Failed to fetch backups:", err);
       });
-      if (activeTab === "configure") {
-        fetchBackupConfigurations(selectedInstance.id).catch((err) => {
-          logger.error("Failed to fetch configurations:", err);
-        });
-      }
+      // Always fetch configurations to check if they exist
+      fetchBackupConfigurations(selectedInstance.id).catch((err) => {
+        logger.error("Failed to fetch configurations:", err);
+      });
     }
   }, [
     selectedInstance?.id,
@@ -57,14 +57,64 @@ function BackupPage() {
   const handleBackupNow = async () => {
     if (!selectedInstance?.id) return;
 
+    // First, fetch the latest configurations to check if any exist
+    try {
+      const configResult = await fetchBackupConfigurations(selectedInstance.id);
+      
+      // Check the response data directly
+      const configurations = configResult.data?.configurations || [];
+      
+      // Also check the store state as fallback
+      const storeSchedules = useBackupStore.getState().schedules || [];
+      
+      // Determine if configurations exist - check both sources
+      const hasConfigurations = (Array.isArray(configurations) && configurations.length > 0) || 
+                                (Array.isArray(storeSchedules) && storeSchedules.length > 0);
+      
+      if (!hasConfigurations) {
+        const result = await showConfirm(
+          "No Backup configuration found. Please create a configuration first.\n\nWould you like to go to the Configuration tab to create one?",
+          "No Backup Configuration",
+          "Yes, go to Configuration",
+          "Cancel"
+        );
+        if (result.isConfirmed) {
+          setActiveTab("configure");
+          // Open the config modal
+          setEditingConfig(null);
+          setShowConfigModal(true);
+        }
+        return;
+      }
+    } catch (error) {
+      logger.error("Error checking backup configurations:", error);
+      // If fetch fails, let the backend handle the check
+      // Continue to attempt backup creation
+    }
+
     const result = await createBackup(selectedInstance.id, {});
 
     if (result.success) {
-      alert("Backup created successfully!");
+      await showSuccess("Backup created successfully!");
       // Refresh backup list
       await fetchBackups(selectedInstance.id);
     } else {
-      alert(`Failed to create backup: ${result.error}`);
+      // Check if error is about missing configuration
+      if (result.error && (result.error.includes("No Backup configuration") || result.error.includes("NO_BACKUP_CONFIG"))) {
+        const confirmResult = await showConfirm(
+          "No Backup configuration found. Please create a configuration first.\n\nWould you like to go to the Configuration tab to create one?",
+          "No Backup Configuration",
+          "Yes, go to Configuration",
+          "Cancel"
+        );
+        if (confirmResult.isConfirmed) {
+          setActiveTab("configure");
+          setEditingConfig(null);
+          setShowConfigModal(true);
+        }
+      } else {
+        await showError(`Failed to create backup: ${result.error}`);
+      }
     }
   };
 
@@ -98,23 +148,24 @@ function BackupPage() {
       document.body.removeChild(a);
     } catch (error) {
       logger.error('Download error:', error);
-      alert(`Failed to download backup: ${error.message}`);
+      await showError(`Failed to download backup: ${error.message}`);
     }
   };
 
   const handleDeleteBackup = async (backupId, backupName) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete backup "${backupName}"?`
+    const result = await showDeleteConfirm(
+      `Are you sure you want to delete backup "${backupName}"?`,
+      "Delete Backup"
     );
-    if (!confirmed) return;
+    if (!result.isConfirmed) return;
 
-    const result = await deleteBackup(selectedInstance.id, backupId);
-    if (result.success) {
-      alert("Backup deleted successfully!");
+    const deleteResult = await deleteBackup(selectedInstance.id, backupId);
+    if (deleteResult.success) {
+      await showSuccess("Backup deleted successfully!");
       // Refresh backup list
       await fetchBackups(selectedInstance.id);
     } else {
-      alert(`Failed to delete backup: ${result.error}`);
+      await showError(`Failed to delete backup: ${deleteResult.error}`);
     }
   };
 
@@ -126,12 +177,12 @@ function BackupPage() {
         configData
       );
       if (result.success) {
-        alert("Configuration updated successfully!");
+        await showSuccess("Configuration updated successfully!");
         setShowConfigModal(false);
         setEditingConfig(null);
         await fetchBackupConfigurations(selectedInstance.id);
       } else {
-        alert(`Failed to update configuration: ${result.error}`);
+        await showError(`Failed to update configuration: ${result.error}`);
       }
     } else {
       const result = await createBackupConfiguration(
@@ -139,35 +190,55 @@ function BackupPage() {
         configData
       );
       if (result.success) {
-        alert("Configuration created successfully!");
+        await showSuccess("Configuration created successfully!");
         setShowConfigModal(false);
         await fetchBackupConfigurations(selectedInstance.id);
       } else {
-        alert(`Failed to create configuration: ${result.error}`);
+        await showError(`Failed to create configuration: ${result.error}`);
       }
     }
   };
 
-  const handleEditConfiguration = (config) => {
-    setEditingConfig(config);
-    setShowConfigModal(true);
+  const handleEditConfiguration = async (config) => {
+    try {
+      // Fetch full configuration details from backend
+      const result = await useBackupStore.getState().getBackupConfiguration(selectedInstance.id, config.id);
+      if (result.success) {
+        // Map backend field names to frontend expectations
+        const mappedConfig = {
+          ...result.data,
+          // Map auto_prune to auto_remove
+          auto_remove: result.data.auto_prune ?? false,
+          // Map days_to_keep to days_to_remove
+          days_to_remove: result.data.days_to_keep ?? 30,
+        };
+        setEditingConfig(mappedConfig);
+        setShowConfigModal(true);
+      } else {
+        await showError(`Failed to load configuration: ${result.error}`);
+      }
+    } catch (error) {
+      logger.error("Error loading configuration:", error);
+      await showError(`Failed to load configuration: ${error.message}`);
+    }
   };
 
   const handleDeleteConfiguration = async (configId, displayName) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete configuration "${displayName}"?`
+    const result = await showDeleteConfirm(
+      `Are you sure you want to delete configuration "${displayName}"?`,
+      "Delete Configuration"
     );
-    if (!confirmed) return;
+    if (!result.isConfirmed) return;
 
-    const result = await deleteBackupConfiguration(
+    const deleteResult = await deleteBackupConfiguration(
       selectedInstance.id,
       configId
     );
-    if (result.success) {
-      alert("Configuration deleted successfully!");
+    if (deleteResult.success) {
+      await showSuccess("Configuration deleted successfully!");
       await fetchBackupConfigurations(selectedInstance.id);
     } else {
-      alert(`Failed to delete configuration: ${result.error}`);
+      await showError(`Failed to delete configuration: ${deleteResult.error}`);
     }
   };
 

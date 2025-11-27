@@ -5,6 +5,7 @@ import AuthGuard from '../components/AuthGuard';
 import { useAuthStore } from '@/lib/store';
 import { useInstancesStore } from '@/lib/store';
 import logger from '@/lib/logger';
+import { showWarning, showError } from '@/lib/swal';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8017';
 
@@ -386,9 +387,9 @@ function DeployPageContent() {
   };
 
   // Handle next button
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep === 1 && !selectedTemplate) {
-      alert('Please select a template version.');
+      await showWarning('Please select a template version.');
       return;
     }
 
@@ -520,7 +521,7 @@ function DeployPageContent() {
 
       // Show specific error message
       const errorMessage = error.message || 'Deployment failed. Please try again.';
-      alert(errorMessage);
+      await showError(errorMessage);
 
       setCurrentStep(2);
     }

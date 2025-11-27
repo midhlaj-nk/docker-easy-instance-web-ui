@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { showInfo } from '@/lib/swal';
 
 const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = null }) => {
   const [formData, setFormData] = useState({
@@ -22,15 +23,19 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
     sftp_user: '',
     sftp_password: '',
     sftp_path: '',
-    // Google Drive
-    gdrive_client_key: '',
-    gdrive_client_secret: '',
-    gdrive_redirect_uri: '',
-    google_drive_folder_key: '',
-    // Dropbox
-    dropbox_client_key: '',
-    dropbox_client_secret: '',
-    dropbox_folder: '',
+        // Google Drive
+        gdrive_client_key: '',
+        gdrive_client_secret: '',
+        gdrive_redirect_uri: '',
+        gdrive_access_token: '',
+        gdrive_refresh_token: '',
+        gdrive_token_validity: '',
+        google_drive_folder_key: '',
+        // Dropbox
+        dropbox_client_key: '',
+        dropbox_client_secret: '',
+        dropbox_refresh_token: '',
+        dropbox_folder: '',
     // NextCloud
     domain: '',
     next_cloud_user_name: '',
@@ -59,10 +64,51 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
   useEffect(() => {
     if (editConfig) {
       // Merge with default values to ensure all fields are defined
-      setFormData(prev => ({
-        ...prev,
-        ...editConfig
-      }));
+      // Map backend field names to frontend field names
+      setFormData({
+        backup_destination: editConfig.backup_destination || editConfig.destination || '',
+        backup_frequency: editConfig.backup_frequency || editConfig.frequency || 'daily',
+        notify_user: editConfig.notify_user ?? false,
+        auto_remove: editConfig.auto_remove ?? editConfig.auto_prune ?? false,
+        days_to_remove: editConfig.days_to_remove ?? editConfig.days_to_keep ?? editConfig.keep_days ?? 30,
+        // Local Storage
+        backup_path: editConfig.backup_path || '',
+        // FTP
+        ftp_host: editConfig.ftp_host || '',
+        ftp_port: editConfig.ftp_port || '21',
+        ftp_user: editConfig.ftp_user || '',
+        ftp_password: editConfig.ftp_password || '',
+        ftp_path: editConfig.ftp_path || '',
+        // SFTP
+        sftp_host: editConfig.sftp_host || '',
+        sftp_port: editConfig.sftp_port || '22',
+        sftp_user: editConfig.sftp_user || '',
+        sftp_password: editConfig.sftp_password || '',
+        sftp_path: editConfig.sftp_path || '',
+        // Google Drive
+        gdrive_client_key: editConfig.gdrive_client_key || '',
+        gdrive_client_secret: editConfig.gdrive_client_secret || '',
+        gdrive_redirect_uri: editConfig.gdrive_redirect_uri || '',
+        gdrive_access_token: editConfig.gdrive_access_token || '',
+        gdrive_refresh_token: editConfig.gdrive_refresh_token || '',
+        gdrive_token_validity: editConfig.gdrive_token_validity || '',
+        google_drive_folder_key: editConfig.google_drive_folder_key || '',
+        // Dropbox
+        dropbox_client_key: editConfig.dropbox_client_key || '',
+        dropbox_client_secret: editConfig.dropbox_client_secret || '',
+        dropbox_refresh_token: editConfig.dropbox_refresh_token || '',
+        dropbox_folder: editConfig.dropbox_folder || '',
+        // NextCloud
+        domain: editConfig.domain || '',
+        next_cloud_user_name: editConfig.next_cloud_user_name || '',
+        next_cloud_password: editConfig.next_cloud_password || '',
+        nextcloud_folder_key: editConfig.nextcloud_folder_key || '',
+        // Amazon S3
+        aws_access_key: editConfig.aws_access_key || '',
+        aws_secret_access_key: editConfig.aws_secret_access_key || '',
+        bucket_file_name: editConfig.bucket_file_name || '',
+        aws_folder_name: editConfig.aws_folder_name || '',
+      });
     } else {
       // Reset to default values when creating new config
       setFormData({
@@ -85,9 +131,13 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
         gdrive_client_key: '',
         gdrive_client_secret: '',
         gdrive_redirect_uri: '',
+        gdrive_access_token: '',
+        gdrive_refresh_token: '',
+        gdrive_token_validity: '',
         google_drive_folder_key: '',
         dropbox_client_key: '',
         dropbox_client_secret: '',
+        dropbox_refresh_token: '',
         dropbox_folder: '',
         domain: '',
         next_cloud_user_name: '',
@@ -132,13 +182,13 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
     // TODO: Implement test connection API call
     setTimeout(() => {
       setTestingConnection(false);
-      alert('Test connection functionality coming soon');
+      showInfo('Test connection functionality coming soon');
     }, 1000);
   };
 
   const handleOAuthSetup = (provider) => {
     // TODO: Implement OAuth setup
-    alert(`${provider} OAuth setup coming soon`);
+    showInfo(`${provider} OAuth setup coming soon`);
   };
 
   if (!isOpen) return null;

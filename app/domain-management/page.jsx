@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar';
 import withInstanceGuard from '../components/withInstanceGuard';
 import { useDomainsStore } from '@/lib/store';
 import logger from '@/lib/logger';
+import { showWarning, showError, showSuccess, showDeleteConfirm } from '@/lib/swal';
 
 function DomainManagementPage({ selectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -42,20 +43,20 @@ function DomainManagementPage({ selectedInstance }) {
 
   const handleAddCustomDomain = async () => {
     if (!customDomain.trim()) {
-      alert('Please enter a domain name');
+      await showWarning('Please enter a domain name');
       return;
     }
 
     // Validate subdomain like in Odoo
     if (!customDomain.includes(subDomain)) {
-      alert(`Please add "${subDomain}" as part of the domain.`);
+      await showWarning(`Please add "${subDomain}" as part of the domain.`);
       return;
     }
 
     // Check if domain already exists
     const existingDomain = domains.find(d => d.name === customDomain);
     if (existingDomain) {
-      alert('Domain must be unique!');
+      await showWarning('Domain must be unique!');
       return;
     }
 
@@ -67,20 +68,20 @@ function DomainManagementPage({ selectedInstance }) {
 
     if (result.success) {
       setCustomDomain('');
-      alert('Domain created successfully!');
+      await showSuccess('Domain created successfully!');
     } else {
-      alert(`Failed to add domain: ${result.error}`);
+      await showError(`Failed to add domain: ${result.error}`);
     }
   };
 
   const handleAddApexDomain = async () => {
     if (!apexDomainData.hostname.trim()) {
-      alert('Please enter a hostname');
+      await showWarning('Please enter a hostname');
       return;
     }
 
     if (apexDomainData.enableSSL && (!apexDomainData.sslCert || !apexDomainData.sslKey)) {
-      alert('Please provide both SSL certificate and key');
+      await showWarning('Please provide both SSL certificate and key');
       return;
     }
 
@@ -103,24 +104,27 @@ function DomainManagementPage({ selectedInstance }) {
         sslKey: null,
         certExpiry: '',
       });
-      alert('Apex domain created successfully!');
+      await showSuccess('Apex domain created successfully!');
     } else {
-      alert(`Failed to add apex domain: ${result.error}`);
+      await showError(`Failed to add apex domain: ${result.error}`);
     }
   };
 
   const handleDeleteDomain = async (domainId, domainName) => {
     if (domains.length === 1) {
-      alert('Warning: Only one domain cannot be deleted!');
+      await showWarning('Warning: Only one domain cannot be deleted!');
       return;
     }
 
-    const confirmed = window.confirm(`Are you sure you want to delete this domain?`);
-    if (!confirmed) return;
+    const result = await showDeleteConfirm(
+      `Are you sure you want to delete this domain?`,
+      'Delete Domain'
+    );
+    if (!result.isConfirmed) return;
 
-    const result = await deleteDomain(selectedInstance.id, domainId);
-    if (!result.success) {
-      alert(`Failed to delete domain: ${result.error}`);
+    const deleteResult = await deleteDomain(selectedInstance.id, domainId);
+    if (!deleteResult.success) {
+      await showError(`Failed to delete domain: ${deleteResult.error}`);
     }
   };
 

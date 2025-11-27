@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import withInstanceGuard from "../components/withInstanceGuard";
 import { useGitStore } from "@/lib/store";
 import { useInstancesStore } from "@/lib/store";
+import { showSuccess, showError, showWarning, showConfirm, showDeleteConfirm } from '@/lib/swal';
 
 function GitManagerPage({ selectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,17 +13,6 @@ function GitManagerPage({ selectedInstance }) {
   const [showPermissions, setShowPermissions] = useState(false);
   const [adminPermission, setAdminPermission] = useState(false);
 
-  // Helper function to show alerts (using browser's native confirm/alert)
-  const showAlert = (options) => {
-    const message = (options.title ? options.title + '\n\n' : '') + (options.text || '');
-    
-    if (options.icon === 'warning' || options.icon === 'question') {
-      return window.confirm(message);
-    } else {
-      window.alert(message);
-      return true;
-    }
-  };
   const [permissions, setPermissions] = useState({
     push: false,
     pull: false,
@@ -76,35 +66,30 @@ function GitManagerPage({ selectedInstance }) {
 
   const handleAddCollaborator = async () => {
     if (!newCollaborator.trim()) {
-      showAlert({
-        icon: "warning",
-        title: "Username Required",
-        text: "Please enter a GitHub username.",
-      });
+      await showWarning("Please enter a GitHub username.", "Username Required");
       return;
     }
 
-    const selectedPerms = [];
+    // GitHub only supports single permission level: pull, push, or admin
+    // push includes pull, so if push is selected, we just send "push"
+    let permission = null;
     if (adminPermission) {
-      selectedPerms.push("admin");
-    } else {
-      if (permissions.push) selectedPerms.push("push");
-      if (permissions.pull) selectedPerms.push("pull");
+      permission = "admin";
+    } else if (permissions.push) {
+      permission = "push"; // push includes pull
+    } else if (permissions.pull) {
+      permission = "pull";
     }
 
-    if (selectedPerms.length === 0) {
-      showAlert({
-        icon: "warning",
-        title: "Permissions Required",
-        text: "Please select at least one permission.",
-      });
+    if (!permission) {
+      await showWarning("Please select at least one permission.", "Permissions Required");
       return;
     }
 
     const result = await addCollaborator(
       selectedInstance.id,
       newCollaborator,
-      selectedPerms
+      [permission] // Send as array for consistency with store function
     );
 
     if (result.success) {
@@ -115,74 +100,50 @@ function GitManagerPage({ selectedInstance }) {
       fetchCollaborators(selectedInstance.id);
 
       // Show success message
-      showAlert({
-        icon: "success",
-        title: "Success",
-        text: result.data?.msg || "Collaborator added successfully!",
-      });
+      await showSuccess(result.msg || result.data?.msg || "Collaborator added successfully!", "Success");
     } else {
       // Show error message
-      showAlert({
-        icon: "error",
-        title: "Error",
-        text: result.data?.msg || result.error || "Failed to add collaborator",
-      });
+      await showError(result.error || result.data?.msg || "Failed to add collaborator", "Error");
     }
   };
 
   const handleRemoveCollaborator = async (username) => {
-    const confirmed = showAlert({
-      icon: "question",
-      title: "Remove Collaborator",
-      text: `Are you sure you want to remove ${username} as a collaborator?`,
-    });
+    const result = await showDeleteConfirm(
+      `Are you sure you want to remove ${username} as a collaborator?`,
+      "Remove Collaborator"
+    );
     
-    if (!confirmed) return;
+    if (!result.isConfirmed) return;
     
-    const result = await removeCollaborator(selectedInstance.id, username);
-    if (result.success) {
+    const removeResult = await removeCollaborator(selectedInstance.id, username);
+    if (removeResult.success) {
       fetchCollaborators(selectedInstance.id);
-      showAlert({
-        icon: "success",
-        title: "Success",
-        text: "Collaborator removed successfully!",
-      });
+      await showSuccess("Collaborator removed successfully!", "Success");
     } else {
-      showAlert({
-        icon: "error",
-        title: "Error",
-        text: result.error || "Failed to remove collaborator",
-      });
+      await showError(removeResult.error || "Failed to remove collaborator", "Error");
     }
   };
 
   const handleRemoveInvitation = async (username, invitationId) => {
-    const confirmed = showAlert({
-      icon: "question",
-      title: "Cancel Invitation",
-      text: `Are you sure you want to cancel the invitation for ${username}?`,
-    });
+    const result = await showConfirm(
+      `Are you sure you want to cancel the invitation for ${username}?`,
+      "Cancel Invitation",
+      "Yes, cancel it",
+      "No"
+    );
     
-    if (!confirmed) return;
+    if (!result.isConfirmed) return;
     
-    const result = await removeInvitation(
+    const removeResult = await removeInvitation(
       selectedInstance.id,
       username,
       invitationId
     );
-    if (result.success) {
+    if (removeResult.success) {
       fetchCollaborators(selectedInstance.id);
-      showAlert({
-        icon: "success",
-        title: "Success",
-        text: "Invitation cancelled successfully!",
-      });
+      await showSuccess("Invitation cancelled successfully!", "Success");
     } else {
-      showAlert({
-        icon: "error",
-        title: "Error",
-        text: result.error || "Failed to remove invitation",
-      });
+      await showError(removeResult.error || "Failed to remove invitation", "Error");
     }
   };
 

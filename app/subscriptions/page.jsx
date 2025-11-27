@@ -6,6 +6,7 @@ import withInstanceGuard from '../components/withInstanceGuard';
 // SubscriptionModal no longer needed - subscriptions redirect directly to invoice portal
 // import SubscriptionModal from '../components/SubscriptionModal';
 import { useAuthStore } from '@/lib/store';
+import { showDeleteConfirm } from '@/lib/swal';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://web.easyinstance.com';
 
@@ -170,7 +171,11 @@ function SubscriptionsPage({ selectedInstance }) {
     }
 
     // Confirm deletion
-    if (!confirm('Are you sure you want to delete this subscription? The associated invoice will also be deleted.')) {
+    const result = await showDeleteConfirm(
+      'Are you sure you want to delete this subscription? The associated invoice will also be deleted.',
+      'Delete Subscription'
+    );
+    if (!result.isConfirmed) {
       return;
     }
 
