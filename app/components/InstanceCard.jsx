@@ -171,7 +171,8 @@ function InstanceCard({
       licenseExpiry,
       logo: overviewData?.logo || logo,
       status: overviewData?.status || (deployed ? 'deployed' : 'draft'),
-      instance_url: overviewData?.instance_url || '',
+      instance_url: overviewData?.instance_url || overviewData?.url || '',
+      http_port: overviewData?.http_port || data.http_port || '',
       github_repo_url,
     };
 

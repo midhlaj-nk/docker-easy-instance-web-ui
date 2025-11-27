@@ -81,13 +81,20 @@ function MetricsPage({ selectedInstance }) {
                     </button>
                   </div>
                   {(() => {
-                    const instanceUrl = selectedInstance?.instance_url || selectedInstance?.url;
-                    // Check if URL exists and is not empty, and is a valid URL
-                    if (instanceUrl && instanceUrl.trim() !== '' && (instanceUrl.startsWith('http://') || instanceUrl.startsWith('https://'))) {
+                    // Always show button if we have an instance with http_port or instance_url
+                    // Construct URL on the fly if needed
+                    if (selectedInstance?.id && (selectedInstance?.http_port || selectedInstance?.instance_url || selectedInstance?.url)) {
                       return (
                         <button
                           onClick={() => {
-                            const url = selectedInstance?.instance_url || selectedInstance?.url;
+                            // Try to get URL from various sources
+                            let url = selectedInstance?.instance_url || selectedInstance?.url;
+                            
+                            // If no URL but we have http_port, construct it
+                            if (!url && selectedInstance?.http_port) {
+                              url = `http://localhost:${selectedInstance.http_port}`;
+                            }
+                            
                             if (url && url.trim() !== '') {
                               window.open(url, '_blank', 'noopener,noreferrer');
                             }
