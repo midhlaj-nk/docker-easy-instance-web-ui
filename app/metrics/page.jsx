@@ -1,18 +1,45 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import RealTimeMetricsChart from "../components/RealTimeMetricsChart";
 import withInstanceGuard from "../components/withInstanceGuard";
 import HistoricalMetricsChart from "../components/HistoricalMetricsChart";
+import { useInstancesStore } from "@/lib/store";
 
 function MetricsPage({ selectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState("live"); // 'live' or 'history'
+  const { getInstanceDetail, setSelectedInstance } = useInstancesStore();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  // Fetch instance details if URL is missing
+  useEffect(() => {
+    if (selectedInstance?.id) {
+      const instanceUrl = selectedInstance?.instance_url || selectedInstance?.url;
+      // If instance_url is missing or empty, fetch full instance details
+      if (!instanceUrl || instanceUrl.trim() === '') {
+        getInstanceDetail(selectedInstance.id)
+          .then((result) => {
+            if (result.success && result.data) {
+              // Update selectedInstance with the fetched data
+              const updatedInstance = {
+                ...selectedInstance,
+                instance_url: result.data.instance_url || result.data.url || '',
+                url: result.data.url || result.data.instance_url || '',
+              };
+              setSelectedInstance(updatedInstance);
+            }
+          })
+          .catch((err) => {
+            console.error('Failed to fetch instance details:', err);
+          });
+      }
+    }
+  }, [selectedInstance?.id, selectedInstance?.instance_url, selectedInstance?.url, getInstanceDetail, setSelectedInstance]);
 
   return (
     <div className="dashboard-theme">
@@ -55,12 +82,15 @@ function MetricsPage({ selectedInstance }) {
                   </div>
                   {(() => {
                     const instanceUrl = selectedInstance?.instance_url || selectedInstance?.url;
-                    console.log('instanceUrl', instanceUrl);
-                    // Check if URL exists and is not empty
+                    // Check if URL exists and is not empty, and is a valid URL
+                    if (instanceUrl && instanceUrl.trim() !== '' && (instanceUrl.startsWith('http://') || instanceUrl.startsWith('https://'))) {
                       return (
                         <button
                           onClick={() => {
-                            window.open(instanceUrl, '_blank', 'noopener,noreferrer');
+                            const url = selectedInstance?.instance_url || selectedInstance?.url;
+                            if (url && url.trim() !== '') {
+                              window.open(url, '_blank', 'noopener,noreferrer');
+                            }
                           }}
                           className="btn-primary flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 px-6 py-2.5"
                         >
@@ -81,7 +111,8 @@ function MetricsPage({ selectedInstance }) {
                           <span className="font-semibold tracking-wide">Connect</span>
                         </button>
                       );
-                    
+                    }
+                    return null;
                   })()}
                 </div>
               </div>
