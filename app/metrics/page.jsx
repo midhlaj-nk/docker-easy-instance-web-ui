@@ -55,8 +55,8 @@ function MetricsPage({ selectedInstance }) {
                   </div>
                   {(() => {
                     const instanceUrl = selectedInstance?.instance_url || selectedInstance?.url;
+                    console.log('instanceUrl', instanceUrl);
                     // Check if URL exists and is not empty
-                    if (instanceUrl && instanceUrl.trim() !== '') {
                       return (
                         <button
                           onClick={() => {
@@ -81,8 +81,7 @@ function MetricsPage({ selectedInstance }) {
                           <span className="font-semibold tracking-wide">Connect</span>
                         </button>
                       );
-                    }
-                    return null;
+                    
                   })()}
                 </div>
               </div>
