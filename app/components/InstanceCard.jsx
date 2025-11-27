@@ -172,7 +172,7 @@ function InstanceCard({
       logo: overviewData?.logo || logo,
       status: overviewData?.status || (deployed ? 'deployed' : 'draft'),
       instance_url: overviewData?.instance_url || overviewData?.url || '',
-      http_port: overviewData?.http_port || data.http_port || '',
+      http_port: overviewData?.http_port || '',
       github_repo_url,
     };
 
