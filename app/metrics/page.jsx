@@ -7,30 +7,42 @@ import withInstanceGuard from "../components/withInstanceGuard";
 import HistoricalMetricsChart from "../components/HistoricalMetricsChart";
 import { useInstancesStore } from "@/lib/store";
 
-function MetricsPage({ selectedInstance }) {
+function MetricsPage({ selectedInstance: propSelectedInstance }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState("live"); // 'live' or 'history'
   const { getInstanceDetail, setSelectedInstance } = useInstancesStore();
+  
+  // Get selectedInstance from store to ensure we have the latest data
+  const storeSelectedInstance = useInstancesStore((state) => state.selectedInstance);
+  
+  // Use store instance if available, otherwise use prop
+  const selectedInstance = storeSelectedInstance || propSelectedInstance;
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Fetch instance details if URL is missing
+  // Fetch instance details if URL or http_port is missing
   useEffect(() => {
     if (selectedInstance?.id) {
       const instanceUrl = selectedInstance?.instance_url || selectedInstance?.url;
-      // If instance_url is missing or empty, fetch full instance details
-      if (!instanceUrl || instanceUrl.trim() === '') {
+      const httpPort = selectedInstance?.http_port;
+      
+      // If instance_url is missing or empty, OR http_port is missing, fetch full instance details
+      if ((!instanceUrl || instanceUrl.trim() === '') || !httpPort) {
+        console.log('Fetching instance details for:', selectedInstance.id, 'URL:', instanceUrl, 'Port:', httpPort);
         getInstanceDetail(selectedInstance.id)
           .then((result) => {
             if (result.success && result.data) {
+              console.log('Fetched instance details:', result.data);
               // Update selectedInstance with the fetched data
               const updatedInstance = {
                 ...selectedInstance,
-                instance_url: result.data.instance_url || result.data.url || '',
-                url: result.data.url || result.data.instance_url || '',
+                instance_url: result.data.instance_url || result.data.url || selectedInstance?.instance_url || '',
+                url: result.data.url || result.data.instance_url || selectedInstance?.url || '',
+                http_port: result.data.http_port || result.data.node_port || selectedInstance?.http_port || '',
               };
+              console.log('Updated instance:', updatedInstance);
               setSelectedInstance(updatedInstance);
             }
           })
@@ -39,7 +51,7 @@ function MetricsPage({ selectedInstance }) {
           });
       }
     }
-  }, [selectedInstance?.id, selectedInstance?.instance_url, selectedInstance?.url, getInstanceDetail, setSelectedInstance]);
+  }, [selectedInstance?.id, selectedInstance?.instance_url, selectedInstance?.url, selectedInstance?.http_port, getInstanceDetail, setSelectedInstance]);
 
   return (
     <div className="dashboard-theme">
@@ -81,9 +93,21 @@ function MetricsPage({ selectedInstance }) {
                     </button>
                   </div>
                   {(() => {
+                    // Debug: Log selectedInstance to see what we have
+                    console.log('SelectedInstance in Connect button:', selectedInstance);
+                    
+                    // Get URL from various sources
+                    let instanceUrl = selectedInstance?.instance_url || selectedInstance?.url;
+                    const httpPort = selectedInstance?.http_port || selectedInstance?.node_port;
+                    
+                    // If no URL but we have http_port, construct it
+                    if ((!instanceUrl || instanceUrl.trim() === '') && httpPort) {
+                      instanceUrl = `http://localhost:${httpPort}`;
+                      console.log('Constructed URL from port:', instanceUrl);
+                    }
+                    
                     // Always show button if we have an instance with http_port or instance_url
-                    // Construct URL on the fly if needed
-                    if (selectedInstance?.id && (selectedInstance?.http_port || selectedInstance?.instance_url || selectedInstance?.url)) {
+                    if (selectedInstance?.id && (httpPort || instanceUrl)) {
                       return (
                         <button
                           onClick={() => {
@@ -91,12 +115,18 @@ function MetricsPage({ selectedInstance }) {
                             let url = selectedInstance?.instance_url || selectedInstance?.url;
                             
                             // If no URL but we have http_port, construct it
-                            if (!url && selectedInstance?.http_port) {
-                              url = `http://localhost:${selectedInstance.http_port}`;
+                            if (!url || url.trim() === '') {
+                              const port = selectedInstance?.http_port || selectedInstance?.node_port;
+                              if (port) {
+                                url = `http://localhost:${port}`;
+                              }
                             }
                             
+                            console.log('Opening URL:', url);
                             if (url && url.trim() !== '') {
                               window.open(url, '_blank', 'noopener,noreferrer');
+                            } else {
+                              console.error('No valid URL found for instance:', selectedInstance);
                             }
                           }}
                           className="btn-primary flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 px-6 py-2.5"
@@ -119,6 +149,7 @@ function MetricsPage({ selectedInstance }) {
                         </button>
                       );
                     }
+                    console.log('Connect button not shown - missing data. ID:', selectedInstance?.id, 'Port:', httpPort, 'URL:', instanceUrl);
                     return null;
                   })()}
                 </div>
