@@ -5,46 +5,46 @@ function Slider() {
     <div className="cmpad relative">
       <div className="lg:h-screen pt-40 md:pt-30 flex flex-col justify-center">
         <div className="opacity-80">
-          <span className="absolute top-35 animate-zoom-pulse delay-1 left-[15%]">
-            <img src="/img/icon1.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute top-35 animate-zoom-pulse delay-1 left-[15%]">
+            <img src="/img/icon1.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute top-[38%] left-0 lg:left-[10%] animate-zoom-pulse delay-2">
-            <img src="/img/icon2.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute top-[38%] left-0 lg:left-[10%] animate-zoom-pulse delay-2">
+            <img src="/img/icon2.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute top-[60%] left-[15%] animate-zoom-pulse delay-3">
-            <img src="/img/icon4.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute top-[60%] left-[15%] animate-zoom-pulse delay-3">
+            <img src="/img/icon4.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute bottom-20 animate-zoom-pulse delay-4">
-            <img src="/img/icon5.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute bottom-20 animate-zoom-pulse delay-4">
+            <img src="/img/icon5.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute top-35 right-[15%] animate-zoom-pulse delay-5">
-            <img src="/img/icon6.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute top-35 right-[15%] animate-zoom-pulse delay-5">
+            <img src="/img/icon6.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute top-[38%] right-0 lg:right-[10%] animate-zoom-pulse delay-6">
-            <img src="/img/icon7.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute top-[38%] right-0 lg:right-[10%] animate-zoom-pulse delay-6">
+            <img src="/img/icon7.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute top-[60%] right-[15%] animate-zoom-pulse delay-7">
-            <img src="/img/icon8.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute top-[60%] right-[15%] animate-zoom-pulse delay-7">
+            <img src="/img/icon8.svg" alt="" className="w-9"/>
           </span>
-          <span className="absolute bottom-20 right-0 animate-zoom-pulse delay-8">
-            <img src="/img/icon9.svg" alt="" className="w-10"/>
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute bottom-20 right-0 animate-zoom-pulse delay-8">
+            <img src="/img/icon9.svg" alt="" className="w-9"/>
           </span>
         </div>
 
         <div className="text-center relative m-auto pb-20 lg:pb-0">
-          {/* <span className="absolute -top-10 lg:-top-5 left-3 lg:-left-40 float">
+          {/* <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute -top-10 lg:-top-5 left-3 lg:-left-40 float">
             <img src="/img/ar1.svg" alt="" className="w-35 md:w-40" />
           </span>
 
-          <span className="absolute right-3 -top-8 lg:-top-2 lg:-right-40 float">
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute right-3 -top-8 lg:-top-2 lg:-right-40 float">
             <img src="/img/ar2.svg" alt="" className="w-35 md:w-40" />
           </span>
 
-          <span className="absolute -bottom-4 left-3 lg:-left-40 float">
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute -bottom-4 left-3 lg:-left-40 float">
             <img src="/img/ar3.svg" alt="" className="w-35 md:w-40" />
           </span>
 
-          <span className="absolute -bottom-5 right-3 lg:-right-40 float">
+          <span className="bg-[#f1f1ff] h-16 w-16 flex items-center justify-center rounded-full absolute -bottom-5 right-3 lg:-right-40 float">
             <img src="/img/ar4.svg" alt="" className="w-35 md:w-40" />
           </span> */}
 
