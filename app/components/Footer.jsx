@@ -3,7 +3,7 @@
 function Footer() {
 
   return (
-    <div>      
+    <div>
       <footer className="footer py-10 md:py-20">
         <div className="container-fluid cmpad">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 ">
@@ -14,8 +14,7 @@ function Footer() {
                 className="w-60 mb-5 mx-auto md:mx-0"
               />
               <p className="brand-description mx-auto md:mx-0">
-                Turpis tortor nunc sed amet at faucibus vitae morbi congue sed
-                ut mauris.
+                Easy Instance provides the fastest and most reliable way to deploy and manage Odoo instances in the cloud. Focus on your business, not infrastructure.
               </p>
               <div className="social-links flex gap-4 justify-center md:justify-start">
                 <a href="#" className="social-link w-6 h-6">
@@ -96,16 +95,16 @@ function Footer() {
                   <h3>Company</h3>
                   <ul className="footer-links">
                     <li>
-                      <a href="#">About Us</a>
+                      <a href="/about">About Us</a>
                     </li>
                     <li>
-                      <a href="#">Career</a>
+                      <a href="/services">Our Services</a>
                     </li>
                     <li>
-                      <a href="#">Case Studies</a>
+                      <a href="/features">Features</a>
                     </li>
                     <li>
-                      <a href="#">Contact Us</a>
+                      <a href="/blogs">Blogs</a>
                     </li>
                   </ul>
                 </div>
@@ -114,7 +113,7 @@ function Footer() {
                   <h3>Support</h3>
                   <ul className="footer-links">
                     <li>
-                      <a href="#">FAQ</a>
+                      <a href="/#faq">FAQ</a>
                     </li>
                     <li>
                       <a href="#">Documentation</a>
@@ -123,7 +122,7 @@ function Footer() {
                       <a href="#">Tutorial</a>
                     </li>
                     <li>
-                      <a href="#">Support</a>
+                      <a href="/contact">Contact Support</a>
                     </li>
                   </ul>
                 </div>

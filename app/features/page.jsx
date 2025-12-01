@@ -1,367 +1,176 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Breadcrumb from "../components/Breadcrumb";
 
 function page() {
   return (
-    <div>
+    <div className="bg-gray-50 min-h-screen font-sans text-gray-900">
       <Header />
-      <div className="pt-32 pb-10">
-        <div className="container-fluid cmpad">
-          <div className="mb-10">
-            <h2 className="text-4xl leading-tight text-center font-semibold mb-3">
-              Our <span className="text-[var(--primary-color)]">Features</span>
-            </h2>
-            <p className="max-w-2xl text-center mx-auto text-[#58586b] leading-relaxed">
-              Use our platform to scale your business: instant Odoo deployment,
-              automatic updates, and elastic cloud resources that grow with you
+
+      <div className="pt-32 pb-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+
+          {/* Hero Section */}
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-gray-900">
+              Powerful Features for <span className="text-[var(--primary-color)]">Modern Teams</span>
+            </h1>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Everything you need to deploy, manage, and scale your Odoo instances with confidence.
+              Simple enough for beginners, powerful enough for experts.
             </p>
-            <nav className="breadcrumb justify-center mt-5">
-              <a href="#">Home</a>
-              <span>›</span>
-              <span className="active">Our Features</span>
-            </nav>
+            <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Our Features" }]} />
           </div>
 
-          <div className="bg-white p-6 md:p-10 rounded-2xl">
-            <div className="mb-16">
-              <video
-                playsInline
-                muted
-                loop
-                autoPlay
-                className="w-full h-auto"
-                src="/img/video.mp4"
-                poster="/images/play-thumb.jpg"
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-3 mb-10 bg-[white] py-3">
-              <a
-                href="#tab1"
-                className="border border-[#c7c7c7] rounded-full px-6 py-3 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] cursor-pointer transition duration-300"
-              >
-                Resource Monitoring
-              </a>
-              <a
-                href="#tab2"
-                className="border border-[#c7c7c7] rounded-full px-6 py-3 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] cursor-pointer transition duration-300"
-              >
-                Domain Management
-              </a>
-              <a
-                href="#tab3"
-                id="tab1"
-                className="border border-[#c7c7c7] rounded-full px-6 py-3 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] cursor-pointer transition duration-300"
-              >
-                See what's new
-              </a>
-            </div>
-
-            <div className="mb-20">
-              <div>
-                <span className="flex m-auto w-max px-5 py-2 bg-[#ffc98f] text-black rounded-full text-[13px]">
-                  Bring your ideas to life
+          {/* Feature 1: Smart Dashboard */}
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 mb-8 transition-all hover:shadow-md">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="order-2 lg:order-1">
+                <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold mb-4">
+                  Centralized Control
                 </span>
-                <h2 className="mt-4 text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold mb-4 text-center">
-                  Monitor Your{" "}
-                  <span className="text-[var(--primary-color)]">
-                    Resources{" "}
-                  </span>
-                  Effortlessly
+                <h2 className="text-3xl font-bold mb-4 text-gray-900">
+                  Manage Everything from a Single Dashboard
                 </h2>
-                <p className="text-[#58586b] max-w-3xl m-auto leading-relaxed text-sm md:text-base text-center mb-5">
-                  Discover real-time insights into your system’s performance and
-                  keep everything running smoothly. Quickly spot issues and
-                  optimize resources with ease.
+                <p className="text-gray-600 leading-relaxed mb-8 text-lg">
+                  Your command center for Odoo. View all your instances, check their status, and perform quick actions like start, stop, or restart—all from one intuitive interface.
                 </p>
-                <a
-                  href="#"
-                  className="px-10 py-3 w-max m-auto bg-[var(--primary-color)] text-white rounded-full flex gap-2 items-center hover:bg-[#454685] transition duration-300"
-                >
-                  Experience the software
+                <a href="/login" className="inline-flex items-center text-[var(--primary-color)] font-semibold hover:underline">
+                  Go to Dashboard <span className="ml-2">→</span>
                 </a>
               </div>
-
-              <div className="mt-15">
-                <div className="p-5 md:p-10 bg-[#f6f7ff] rounded-2xl border border-[#dfe0ff]  mb-10">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                    <div className="lg:col-span-6 flex flex-col justify-center">
-                      <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold mb-4">
-                        Use our platform <br />
-                        To scale{" "}
-                        <span className="text-[var(--primary-color)]">
-                          your{" "}
-                        </span>
-                        business
-                      </h2>
-                      <p className="text-[#58586b] leading-relaxed text-sm md:text-base mb-5">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Tempore animi suscipit quaerat natus at saepe, molestiae
-                        numquam, facilis quasi libero labore? Ratione.
-                      </p>
-                      <a
-                        href="#"
-                        className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                      >
-                        Try Demo
-                      </a>
-                    </div>
-
-                    <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                      <img
-                        src="/img/img2.png"
-                        alt="Business Growth"
-                        className="w-full max-w-full rounded-2xl object-cover"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                  <div className="order-2 lg:order-1 lg:col-span-7 h-full">
-                    <div className="relative h-full">
-                      {/* Image */}
-                      <img
-                        src="/img/soft1.jpg"
-                        alt="Business Growth"
-                        className="w-full max-w-full rounded-2xl object-cover"
-                      />
-
-                      {/* Black Overlay */}
-                      <div className="absolute inset-0 bg-black/60 rounded-2xl"></div>
-
-                      {/* Caption */}
-                      <p className="absolute bottom-8 left-8 right-8 text-white text-xl md:text-4xl font-medium">
-                        Efficiency meets <br />
-                        scalability meets effortless management.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="order-1 lg:order-2 lg:col-span-5 h-full">
-                    <div className="relative h-full">
-                      {/* Image */}
-                      <img
-                        src="/img/soft2.jpg"
-                        alt="Business Growth"
-                        className="w-full max-w-full rounded-2xl object-cover h-full"
-                      />
-
-                      {/* Black Overlay */}
-                      <div className="absolute inset-0 bg-black/60 rounded-2xl"></div>
-
-                      {/* Caption */}
-                      <p
-                        id="tab2"
-                        className="absolute bottom-8 left-8 right-8 text-white text-xl md:text-4xl font-medium"
-                      >
-                        Speed meets <br />
-                        simplicity meets seamless control.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              <div className="order-1 lg:order-2 flex justify-center">
+                <img
+                  src="/img/dashboard_view.png"
+                  alt="Smart Dashboard Interface"
+                  className="rounded-2xl shadow-xl w-full max-w-lg object-cover border border-gray-100"
+                />
               </div>
             </div>
+          </div>
 
-            <div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold mb-4 text-center">
-                Watch it scale
-                <br /> And unlock the future.
+          {/* Feature 2: Live Metrics */}
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 mb-8 transition-all hover:shadow-md">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <span className="inline-block py-1 px-3 rounded-full bg-purple-50 text-purple-600 text-sm font-semibold mb-4">
+                Observability
+              </span>
+              <h2 className="text-3xl font-bold mb-4 text-gray-900">
+                Instant Visibility into Performance
               </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center max-w-100% md:max-w-[85%] m-auto mb-10 md:mb-20 mt-10 md:mt-20">
-                <div className="lg:col-span-6 flex flex-col justify-center">
-                  <span className="w-max mb-3 px-5 py-2 bg-[#ffc98f] text-black rounded-full text-[13px]">
-                    Bring your ideas to life
-                  </span>
-                  <h2 className="text-2xl md:text-3xl lg:text-3xl leading-tight font-semibold mb-4">
-                    Use our platform <br />
-                    To scale{" "}
-                    <span className="text-[var(--primary-color)]">your </span>
-                    business
-                  </h2>
-                  <p className="text-[#58586b] leading-relaxed text-sm md:text-base mb-5">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempore animi suscipit.
-                  </p>
-                  <a
-                    href="#"
-                    className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                  >
-                    Try Demo
-                  </a>
-                </div>
-
-                <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                  <img
-                    src="/img/img2.png"
-                    alt="Business Growth"
-                    className="w-full max-w-full rounded-2xl object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center max-w-100% md:max-w-[85%] m-auto">
-                <div className="lg:order-1 order-2 lg:col-span-6 flex justify-center lg:justify-end">
-                  <img
-                    src="/img/img2.png"
-                    alt="Business Growth"
-                    className="w-full max-w-full rounded-2xl object-cover"
-                  />
-                </div>
-                <div className="lg:order-2 order-1 lg:col-span-6 flex flex-col justify-center">
-                  <span className="w-max mb-3 px-5 py-2 bg-[#ffc98f] text-black rounded-full text-[13px]">
-                    Bring your ideas to life
-                  </span>
-                  <h2 className="text-2xl md:text-3xl lg:text-3xl leading-tight font-semibold mb-4">
-                    Use our platform <br />
-                    To scale{" "}
-                    <span className="text-[var(--primary-color)]">your </span>
-                    business
-                  </h2>
-                  <p className="text-[#58586b] leading-relaxed text-sm md:text-base mb-5">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempore animi.
-                  </p>
-                  <a
-                    href="#"
-                    className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                  >
-                    Try Demo
-                  </a>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center max-w-100% md:max-w-[85%] m-auto mb-10 md:mb-20 mt-10 md:mt-20">
-                <div className="lg:col-span-6 flex flex-col justify-center">
-                  <span className="w-max mb-3 px-5 py-2 bg-[#ffc98f] text-black rounded-full text-[13px]">
-                    Bring your ideas to life
-                  </span>
-                  <h2 className="text-2xl md:text-3xl lg:text-3xl leading-tight font-semibold mb-4">
-                    Use our platform <br />
-                    To scale{" "}
-                    <span className="text-[var(--primary-color)]">your </span>
-                    business
-                  </h2>
-                  <p className="text-[#58586b] leading-relaxed text-sm md:text-base mb-5">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempore animi suscipit.
-                  </p>
-                  <a
-                    href="#"
-                    className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                  >
-                    Try Demo
-                  </a>
-                </div>
-
-                <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                  <img
-                    src="/img/img2.png"
-                    alt="Business Growth"
-                    className="w-full max-w-full rounded-2xl object-cover"
-                  />
-                </div>
-              </div>
+              <p className="text-gray-600 text-lg">
+                Track every metric that matters. From CPU spikes to memory usage, get the granular data you need to optimize your infrastructure.
+              </p>
             </div>
-
-            <div id="tab3">
-              <div className="p-5 md:p-15 bg-[#f6f7ff] rounded-2xl border border-[#dfe0ff]">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold text-center mb-10">
-                  New ways Easy
-                  <br /> Instance helps you smarter.
-                </h2>
-
-                <div className="p-5 lg:p-10 bg-[#ffffff] rounded-2xl mb-10">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                    <div className="lg:col-span-6 flex flex-col justify-center">
-                      <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold mb-4">
-                        Easy Instance and <br />
-                        Other ways to simplify
-                        <br />
-                        <span className="text-[var(--primary-color)]">
-                          Your{" "}
-                        </span>
-                        workflow.
-                      </h2>
-                      <a
-                        href="#"
-                        className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                      >
-                        Try Demo
-                      </a>
-                    </div>
-
-                    <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                      <img
-                        src="/img/f1.jpg"
-                        alt="Business Growth"
-                        className="w-full max-w-full rounded-2xl object-cover"
-                      />
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="relative group overflow-hidden rounded-2xl shadow-lg">
+                <img
+                  src="/img/soft1.jpg"
+                  alt="Performance Metrics"
+                  className="w-full h-64 object-cover transition duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                  <p className="text-white font-medium text-xl">Visualize performance instantly</p>
                 </div>
-                <div className="p-5 lg:p-10 bg-[#ffffff] rounded-2xl mb-10">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                    <div className="order-2 lg:order-1 lg:col-span-6 flex justify-center lg:justify-end">
-                      <img
-                        src="/img/f2.jpg"
-                        alt="Business Growth"
-                        className="w-full max-w-full rounded-2xl object-cover"
-                      />
-                    </div>
-                    <div className="order-1 lg:order-2 lg:col-span-6 flex flex-col justify-center">
-                      <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold mb-4">
-                        Connect and <br />
-                        Manage on all your
-                        <br />{" "}
-                        <span className="text-[var(--primary-color)]">
-                          Favorite{" "}
-                        </span>
-                        devices.
-                      </h2>
-                      <a
-                        href="#"
-                        className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                      >
-                        Try Demo
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-5 lg:p-10 bg-[#ffffff] rounded-2xl">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                    <div className="lg:col-span-6 flex flex-col justify-center">
-                      <h2 className="text-2xl md:text-3xl lg:text-4xl leading-tight font-semibold mb-4">
-                        Enhanced security and <br /> Advanced to scale{" "}
-                        <span className="text-[var(--primary-color)]">
-                          <br />
-                          Threat{" "}
-                        </span>
-                        protection.
-                      </h2>
-                      <a
-                        href="#"
-                        className="px-10 py-3 w-max bg-[var(--primary-color)] text-white rounded-full flex gap-2 hover:bg-[#454685] transition duration-300"
-                      >
-                        Try Demo
-                      </a>
-                    </div>
-
-                    <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                      <img
-                        src="/img/f3.jpg"
-                        alt="Business Growth"
-                        className="w-full max-w-full rounded-2xl object-cover"
-                      />
-                    </div>
-                  </div>
+              </div>
+              <div className="relative group overflow-hidden rounded-2xl shadow-lg">
+                <img
+                  src="/img/soft2.jpg"
+                  alt="Resource Usage"
+                  className="w-full h-64 object-cover transition duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                  <p className="text-white font-medium text-xl">Data-driven decisions</p>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Feature 3: Scaling & Infrastructure */}
+          <div className="bg-[#1e1e2e] rounded-3xl p-8 md:p-16 text-white mb-8 overflow-hidden relative shadow-2xl">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-[var(--primary-color)] opacity-10 blur-3xl rounded-full"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-purple-600 opacity-10 blur-3xl rounded-full"></div>
+
+            <div className="relative z-10">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Scale without limits</h2>
+                <p className="text-gray-400 max-w-xl mx-auto text-lg">
+                  Unlock your potential with infrastructure that grows with you.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Vertical Scaling */}
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition duration-300 backdrop-blur-sm">
+                  <div className="h-48 mb-6 rounded-xl overflow-hidden bg-gray-800/50">
+                    <img src="/img/vertical_scaling.png" alt="Vertical Scaling" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-500" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Vertical Scaling</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    Need more power? Upgrade CPU and RAM allocation instantly from the dashboard without migration.
+                  </p>
+                </div>
+                {/* Global Infra */}
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition duration-300 backdrop-blur-sm">
+                  <div className="h-48 mb-6 rounded-xl overflow-hidden bg-gray-800/50">
+                    <img src="/img/global_infrastructure.png" alt="Global Infrastructure" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-500" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Global Infrastructure</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    Minimize latency by deploying your Odoo instances in regions closest to your users.
+                  </p>
+                </div>
+                {/* Reliability */}
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition duration-300 backdrop-blur-sm">
+                  <div className="h-48 mb-6 rounded-xl overflow-hidden bg-gray-800/50">
+                    <img src="/img/uptime_guarantee.png" alt="Uptime Guarantee" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-500" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">99.9% Uptime</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    Our redundant infrastructure and automated failover systems ensure your mission-critical ERP is always online.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feature 4: Developer Tools */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Git Integration */}
+            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+              <div className="mb-8">
+                <span className="inline-block py-1 px-3 rounded-full bg-green-50 text-green-600 text-sm font-semibold mb-3">
+                  Workflow
+                </span>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Seamless Git Integration</h3>
+                <p className="text-gray-600 text-base leading-relaxed">
+                  Connect your GitHub repositories and deploy custom addons with ease. Manage branches, track commits, and streamline your development workflow directly from the dashboard.
+                </p>
+              </div>
+              <div className="mt-auto rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-inner">
+                <img src="/img/f1.jpg" alt="Git Integration" className="w-full h-56 object-cover hover:scale-105 transition duration-500" />
+              </div>
+            </div>
+
+            {/* Log Viewer */}
+            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col transition-all hover:shadow-md">
+              <div className="mb-8">
+                <span className="inline-block py-1 px-3 rounded-full bg-orange-50 text-orange-600 text-sm font-semibold mb-3">
+                  Debugging
+                </span>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Real-Time Log Viewer</h3>
+                <p className="text-gray-600 text-base leading-relaxed">
+                  Monitor your Odoo logs in real-time. Filter, search, and analyze logs to troubleshoot errors and optimize performance instantly.
+                </p>
+              </div>
+              <div className="mt-auto rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-inner">
+                <img src="/img/f3.jpg" alt="Log Viewer" className="w-full h-56 object-cover hover:scale-105 transition duration-500" />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
       <Footer />

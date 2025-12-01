@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Breadcrumb from "../components/Breadcrumb";
 
 function page() {
   return (
@@ -17,11 +18,7 @@ function page() {
               updates, and scalable cloud infrastructure that evolves alongside
               your growth.
             </p>
-            <nav className="breadcrumb justify-center mt-5 text-sm sm:text-base">
-              <a href="#">Home</a>
-              <span>›</span>
-              <span className="active">About Us</span>
-            </nav>
+            <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About Us" }]} />
           </div>
 
           <div className="bg-white p-4 sm:p-6 md:p-10 rounded-lg mb-5">
@@ -47,15 +44,15 @@ function page() {
                 <div className="flex flex-wrap gap-6 sm:gap-8">
                   <div className="item">
                     <span className="checkmark">✓</span>
-                    <span className="text">On demand support</span>
+                    <span className="text">Expert Odoo Support</span>
                   </div>
                   <div className="item">
                     <span className="checkmark">✓</span>
-                    <span className="text">Information Sharing</span>
+                    <span className="text">Community Driven</span>
                   </div>
                   <div className="item">
                     <span className="checkmark">✓</span>
-                    <span className="text">Cloud Technology</span>
+                    <span className="text">Cloud Native Infrastructure</span>
                   </div>
                 </div>
               </div>

@@ -10,30 +10,34 @@ function Faq() {
 
   const faqs = [
     {
-      question: "What is the primary role of a business agency?",
+      question: "How long does it take to deploy an Odoo instance?",
       answer:
-        "A business agency serves as a strategic partner that helps companies achieve their goals through specialized services, expertise, and resources. They provide consulting, marketing, design, and operational support to drive growth and efficiency.",
+        "It takes less than a minute! Our automated cloud infrastructure provisions your instance instantly, so you can start working immediately.",
     },
     {
-      question:
-        "What kinds of services should I anticipate from a business agency?",
+      question: "Can I use my own domain name?",
       answer:
-        "Business agencies typically offer services including digital marketing, brand strategy, web development, content creation, SEO, social media management, advertising campaigns, analytics, and business consulting tailored to your industry needs.",
+        "Yes, you can map your custom domain (e.g., erp.yourcompany.com) to your Odoo instance easily through our dashboard. We also handle SSL certificates automatically.",
     },
     {
-      question: "How often should I consider updating my website?",
+      question: "Do you support custom addons and modules?",
       answer:
-        "Website updates should be considered every 2-3 years for major redesigns, but content should be updated regularly. Minor updates for security, functionality, and fresh content should happen monthly or quarterly to maintain performance and relevance.",
+        "Absolutely. You can install custom addons via our seamless GitHub integration or by uploading module ZIP files directly to your instance.",
     },
     {
-      question: "How often is it recommended to refresh my website?",
+      question: "How are backups handled?",
       answer:
-        "A complete website refresh is recommended every 2-3 years to keep up with design trends, technology updates, and user expectations. However, regular content updates, blog posts, and minor improvements should happen continuously to maintain engagement and search rankings.",
+        "We perform daily automated backups to ensure your data is safe. You can also trigger manual backups at any time and download them for off-site storage.",
+    },
+    {
+      question: "Can I upgrade my plan later?",
+      answer:
+        "Yes, you can upgrade or downgrade your subscription plan at any time. Resources like CPU and RAM are adjusted instantly without data loss.",
     },
   ];
 
   return (
-    <div>
+    <div id="faq">
       <div className="bg-[white] py-10">
         <div className="container-fluid cmpad">
           <div className="hero-section">
@@ -77,9 +81,8 @@ function Faq() {
           {faqs.map((item, index) => (
             <div key={index} className="accordion-item">
               <button
-                className={`accordion-header ${
-                  activeIndex === index ? "active" : ""
-                }`}
+                className={`accordion-header ${activeIndex === index ? "active" : ""
+                  }`}
                 onClick={() => toggleAccordion(index)}
               >
                 {item.question}
@@ -97,9 +100,8 @@ function Faq() {
                 </svg>
               </button>
               <div
-                className={`accordion-content ${
-                  activeIndex === index ? "active" : ""
-                }`}
+                className={`accordion-content ${activeIndex === index ? "active" : ""
+                  }`}
               >
                 <div className="accordion-body">{item.answer}</div>
               </div>
@@ -108,7 +110,7 @@ function Faq() {
         </div>
       </div>
 
-      
+
     </div>
   );
 }

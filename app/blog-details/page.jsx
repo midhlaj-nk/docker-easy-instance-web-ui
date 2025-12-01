@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import Breadcrumb from "../components/Breadcrumb";
 
 function page() {
   return (
@@ -17,15 +18,11 @@ function page() {
               and practical tips to help you optimize workflows and grow your
               business with confidence.
             </p>
-            <nav className="breadcrumb justify-center mt-5">
-              <a href="#">Home</a>
-              <span>›</span>
-              <a href="#">Blogs</a>
-              <span>›</span>
-              <span className="active">
-                10 Essential Web Development Trends for 2025
-              </span>
-            </nav>
+            <Breadcrumb items={[
+              { label: "Home", href: "/" },
+              { label: "Blogs", href: "/blogs" },
+              { label: "10 Essential Web Development Trends for 2025" }
+            ]} />
           </div>
 
           <div className="bg-white p-6 md:p-10 rounded-lg mb-5">

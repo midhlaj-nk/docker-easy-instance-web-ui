@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 function Header() {
   const [isActive, setIsActive] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [showBlog, setShowBlog] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,9 +17,23 @@ function Header() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/config/blog_settings`
+        );
+        const data = await response.json();
+        setShowBlog(
+          data.show_blog_section === "True" || data.show_blog_section === true
+        );
+      } catch (error) {
+        console.error("Error fetching blog settings:", error);
+      }
+    };
 
-    // Cleanup
+    window.addEventListener("scroll", handleScroll);
+    fetchSettings();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -28,9 +43,7 @@ function Header() {
     <div>
       <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 ">
         <div className="container-fluid cmpad">
-          <div
-            className="mt-3 bg-white p-4 border border-[#5355ce14] flex gap-6 justify-between items-center rounded-full [box-shadow:0px_0px_20px_rgb(102_103_171_/_20%)] transition-all duration-300"
-          >
+          <div className="mt-3 bg-white p-4 border border-[#5355ce14] flex gap-6 justify-between items-center rounded-full [box-shadow:0px_0px_20px_rgb(102_103_171_/_20%)] transition-all duration-300">
             <a href="/" className="xl:w-1/3 sm:pl-1">
               <Image src="/logo/logo.svg" alt="Logo" width={240} height={30} />
             </a>
@@ -38,22 +51,20 @@ function Header() {
             {/* Desktop Nav */}
             <nav className="hidden lg:flex flex-1 w-2/3 items-center justify-between">
               <ul className="flex space-x-6 text-[15px]">
-                <li>
-                  <a
-                    href="/about"
-                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
-                  >
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/services"
-                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
-                  >
-                    Our Services
-                  </a>
-                </li>
+
+                {/* 1. Blogs */}
+                {showBlog && (
+                  <li>
+                    <a
+                      href="/blogs"
+                      className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                    >
+                      Blogs
+                    </a>
+                  </li>
+                )}
+
+                {/* 2. Features */}
                 <li>
                   <a
                     href="/features"
@@ -62,14 +73,28 @@ function Header() {
                     Features
                   </a>
                 </li>
+
+                {/* 3. Our Services */}
                 <li>
                   <a
-                    href="/blogs"
+                    href="/services"
                     className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
                   >
-                    Blogs
+                    Our Services
                   </a>
                 </li>
+
+                {/* 4. About Us */}
+                <li>
+                  <a
+                    href="/about"
+                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                  >
+                    About Us
+                  </a>
+                </li>
+
+                {/* 5. Contact Us */}
                 <li>
                   <a
                     href="/contact"
@@ -79,6 +104,7 @@ function Header() {
                   </a>
                 </li>
               </ul>
+
               <a
                 href="/login"
                 className="ml-4 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full flex gap-2 items-center hover:bg-[#454685] transition duration-300"
@@ -125,7 +151,8 @@ function Header() {
               </svg>
             </button>
           </div>
-          {/* Mobile menu panel with animation */}
+
+          {/* Mobile Menu */}
           <div
             className={`lg:hidden bg-white rounded-2xl overflow-hidden transform transition-all duration-300 ${
               isMobileOpen
@@ -135,22 +162,20 @@ function Header() {
           >
             <div className="p-4">
               <ul className="space-y-3 text-[15px] text-left">
-                <li>
-                  <a
-                    href="/about"
-                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
-                  >
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/services"
-                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
-                  >
-                    Our Services
-                  </a>
-                </li>
+
+                {/* 1. Blogs */}
+                {showBlog && (
+                  <li>
+                    <a
+                      href="/blogs"
+                      className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                    >
+                      Blogs
+                    </a>
+                  </li>
+                )}
+
+                {/* 2. Features */}
                 <li>
                   <a
                     href="/features"
@@ -159,14 +184,28 @@ function Header() {
                     Features
                   </a>
                 </li>
+
+                {/* 3. Our Services */}
                 <li>
                   <a
-                    href="/blogs"
+                    href="/services"
                     className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
                   >
-                    Blogs
+                    Our Services
                   </a>
                 </li>
+
+                {/* 4. About Us */}
+                <li>
+                  <a
+                    href="/about"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    About Us
+                  </a>
+                </li>
+
+                {/* 5. Contact Us */}
                 <li>
                   <a
                     href="/contact"
@@ -176,8 +215,9 @@ function Header() {
                   </a>
                 </li>
               </ul>
+
               <a
-                href="#"
+                href="/login"
                 className="mt-4 w-full inline-flex justify-center px-6 py-3 bg-[var(--primary-color)] text-white rounded-full items-center hover:bg-[#454685] transition duration-300"
               >
                 Let’s Go

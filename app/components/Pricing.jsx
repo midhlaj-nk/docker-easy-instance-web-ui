@@ -66,13 +66,13 @@ function Pricing() {
     if (!price && price !== 0) {
       return { number: '0', symbol: '$', currency: 'USD' };
     }
-    
+
     // Format number with proper locale (handles thousands separators)
     const formattedNumber = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(price);
-    
+
     // Get currency symbol based on currency code
     const currencySymbols = {
       'USD': '$',
@@ -91,22 +91,22 @@ function Pricing() {
       'KRW': '₩',
       'THB': '฿',
     };
-    
+
     // If currency is already a symbol (like "$"), use it directly
     // Otherwise, look it up in the map
     const symbol = currencySymbols[currency?.toUpperCase()] || currency || '$';
-    
-    return { 
-      number: formattedNumber, 
-      symbol: symbol, 
-      currency: currency || 'USD' 
+
+    return {
+      number: formattedNumber,
+      symbol: symbol,
+      currency: currency || 'USD'
     };
   };
 
   const formatPeriod = (billingPeriod, billingPeriodType) => {
     const periodType = billingPeriodType || 'month';
     const period = billingPeriod || 1;
-    
+
     if (period === 1) {
       const typeMap = {
         'day': 'Day',
@@ -116,7 +116,7 @@ function Pricing() {
       };
       return `/${typeMap[periodType] || 'Month'}`;
     }
-    
+
     const typeMap = {
       'day': 'Days',
       'week': 'Weeks',
@@ -144,12 +144,10 @@ function Pricing() {
           <span className="text-[var(--primary-color)]"> Your </span> Business.
         </h2>
         <p className="max-w-2xl mx-auto text-[#58586b] leading-relaxed mb-10">
-          Easy Instance brings Odoo's power in a simple, user friendly way no
-          steep learning curves, just a platform that empowers your team from
-          day one.
+          Choose the perfect plan for your Odoo deployment. From small business starters to enterprise-grade scaling, we have a solution for you.
         </p>
         <a
-          href=""
+          href="/login"
           className="w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
         >
           View All Plans
@@ -169,12 +167,12 @@ function Pricing() {
               const features = plan.features_list && plan.features_list.length > 0
                 ? plan.features_list
                 : [
-                    plan.enable_custom_addons ? 'Custom Addons' : null,
-                    plan.max_users > 0 ? `${plan.max_users} Users` : 'Unlimited Users',
-                    'Free Domain Mapping',
-                    plan.enable_github_integration ? 'GitHub Integration' : null,
-                    'Support Automated Renewal'
-                  ].filter(Boolean);
+                  plan.enable_custom_addons ? 'Custom Addons' : null,
+                  plan.max_users > 0 ? `${plan.max_users} Users` : 'Unlimited Users',
+                  'Free Domain Mapping',
+                  plan.enable_github_integration ? 'GitHub Integration' : null,
+                  'Support Automated Renewal'
+                ].filter(Boolean);
 
               const priceData = formatPrice(plan.price, plan.currency);
               const period = formatPeriod(plan.billing_period, plan.billing_period_type);
@@ -205,7 +203,7 @@ function Pricing() {
                     ))}
                   </ul>
 
-                  <button 
+                  <button
                     className={`cta-button ${isFeatured ? 'featured' : ''}`}
                     onClick={() => handleSubscribe(plan)}
                   >
