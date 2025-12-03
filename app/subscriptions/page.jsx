@@ -148,11 +148,13 @@ function SubscriptionsPage({ selectedInstance }) {
 
       // Check if we should redirect to invoice portal
       if (data.data?.redirect_immediately && data.data?.invoice_portal_url) {
-        // Immediately redirect to invoice portal (no modal)
-        window.location.href = data.data.invoice_portal_url;
+        // Open invoice portal in new tab
+        window.open(data.data.invoice_portal_url, '_blank');
+        setIsCreatingSubscription(false);
       } else if (data.data?.invoice_portal_url) {
-        // Fallback: redirect even if flag not set
-        window.location.href = data.data.invoice_portal_url;
+        // Fallback: open in new tab even if flag not set
+        window.open(data.data.invoice_portal_url, '_blank');
+        setIsCreatingSubscription(false);
       } else {
         throw new Error('Invoice portal URL not received');
       }
@@ -210,10 +212,10 @@ function SubscriptionsPage({ selectedInstance }) {
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -228,7 +230,7 @@ function SubscriptionsPage({ selectedInstance }) {
 
   const getTrialStatus = () => {
     if (!currentSubscription || !currentSubscription.is_trial) return null;
-    
+
     const daysRemaining = getDaysRemaining(currentSubscription.trial_end_date);
     if (daysRemaining === null) return null;
 
@@ -257,18 +259,18 @@ function SubscriptionsPage({ selectedInstance }) {
 
               {/* Current Subscription Details - Only show when payment is completed */}
               {currentSubscription && currentSubscription.payment_status === 'paid' && (
-                <div className="mb-6 p-6 rounded-lg" style={{ 
-                  backgroundColor: 'var(--background-secondary)', 
-                  boxShadow: 'var(--card-shadow)' 
+                <div className="mb-6 p-6 rounded-lg" style={{
+                  backgroundColor: 'var(--background-secondary)',
+                  boxShadow: 'var(--card-shadow)'
                 }}>
                   <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
                     Subscription Details
                   </h2>
-                  
+
                   <div className="space-y-4">
                     {/* Plan Info */}
                     <div className="flex items-center mb-4">
-                      <span className="px-3 py-1 rounded-full text-sm font-medium mr-3" 
+                      <span className="px-3 py-1 rounded-full text-sm font-medium mr-3"
                         style={{ backgroundColor: '#10b981', color: '#ffffff' }}>
                         ACTIVE
                       </span>
@@ -377,10 +379,10 @@ function SubscriptionsPage({ selectedInstance }) {
 
               {/* Pending Payment Subscription */}
               {subscriptions.find(sub => sub.state === 'pending_payment' || (sub.state === 'active' && sub.payment_status !== 'paid')) && (
-                <div className="mb-6 p-6 rounded-lg border-2" style={{ 
-                  backgroundColor: 'var(--background-secondary)', 
+                <div className="mb-6 p-6 rounded-lg border-2" style={{
+                  backgroundColor: 'var(--background-secondary)',
                   borderColor: '#fbbf24',
-                  boxShadow: 'var(--card-shadow)' 
+                  boxShadow: 'var(--card-shadow)'
                 }}>
                   <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
                     Pending Payment
@@ -390,7 +392,7 @@ function SubscriptionsPage({ selectedInstance }) {
                     .map((sub) => (
                       <div key={sub.id} className="mb-4 pb-4 border-b last:border-b-0" style={{ borderColor: 'var(--border-color)' }}>
                         <div className="flex items-center mb-2">
-                          <span className="px-3 py-1 rounded-full text-sm font-medium mr-3" 
+                          <span className="px-3 py-1 rounded-full text-sm font-medium mr-3"
                             style={{ backgroundColor: '#fbbf24', color: '#ffffff' }}>
                             PENDING PAYMENT
                           </span>
@@ -439,10 +441,10 @@ function SubscriptionsPage({ selectedInstance }) {
 
               {/* No Active Subscription Message */}
               {!currentSubscription && !subscriptions.find(sub => sub.state === 'pending_payment' || (sub.state === 'active' && sub.payment_status !== 'paid')) && (
-                <div className="mb-6 p-6 rounded-lg border-2 border-dashed" style={{ 
-                  backgroundColor: 'var(--background-secondary)', 
+                <div className="mb-6 p-6 rounded-lg border-2 border-dashed" style={{
+                  backgroundColor: 'var(--background-secondary)',
                   borderColor: 'var(--border-color)',
-                  boxShadow: 'var(--card-shadow)' 
+                  boxShadow: 'var(--card-shadow)'
                 }}>
                   <div className="text-center">
                     <p className="text-lg font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
@@ -462,89 +464,89 @@ function SubscriptionsPage({ selectedInstance }) {
                     Available Plans
                   </h2>
 
-              {isLoading ? (
-                <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
-                  Loading subscription plans...
-                </div>
-              ) : error ? (
-                <div className="mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700">
-                  <p className="font-semibold">Error:</p>
-                  <p>{error}</p>
-                </div>
-              ) : plans.length === 0 ? (
-                <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
-                  No subscription plans available.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {plans.map((plan) => (
-                    <div 
-                      key={plan.id} 
-                      className="rounded-lg p-6 flex flex-col transition-colors duration-300" 
-                      style={{ 
-                        backgroundColor: 'var(--background-secondary)', 
-                        boxShadow: 'var(--card-shadow)',
-                        border: plan.is_featured ? '2px solid var(--primary-color)' : 'none'
-                      }}
-                    >
-                      {plan.is_featured && (
-                        <div className="mb-2">
-                          <span className="px-2 py-1 rounded text-xs font-medium" 
-                            style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}>
-                            Featured
-                          </span>
-                        </div>
-                      )}
-                      
-                      <div className="flex items-baseline mb-4">
-                        <h2 className="text-3xl font-bold" style={{ color: 'var(--text-color)' }}>
-                          {getCurrencySymbol(plan.currency)}{new Intl.NumberFormat('en-US', {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }).format(plan.price)}
-                        </h2>
-                        <span className="ml-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                          /{plan.billing_period} {plan.billing_period_type}
-                        </span>
-                      </div>
-                      
-                      <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                        {plan.name}
-                      </h3>
-                      
-                      {plan.description && (
-                        <p className="mb-4 flex-grow text-sm" style={{ color: 'var(--text-secondary)' }}>
-                          {plan.description.replace(/<[^>]*>/g, '')}
-                        </p>
-                      )}
-                      
-                      <div className="mb-4 space-y-2 text-sm">
-                        <div style={{ color: 'var(--text-secondary)' }}>
-                          <strong>CPU:</strong> {plan.cpu_limit} cores
-                        </div>
-                        <div style={{ color: 'var(--text-secondary)' }}>
-                          <strong>Memory:</strong> {plan.memory_limit}
-                        </div>
-                        <div style={{ color: 'var(--text-secondary)' }}>
-                          <strong>Storage:</strong> {plan.storage_limit_gb} GB
-                        </div>
-                        <div style={{ color: 'var(--text-secondary)' }}>
-                          <strong>Users:</strong> {plan.max_users === 0 ? 'Unlimited' : plan.max_users}
-                        </div>
-                      </div>
-                      
-                      <button 
-                        onClick={() => handleSubscribe(plan)}
-                        disabled={isLoading || isCreatingSubscription}
-                        className="px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed" 
-                        style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
-                      >
-                        {currentSubscription && !currentSubscription.is_trial ? 'Upgrade' : 'Subscribe'}
-                      </button>
+                  {isLoading ? (
+                    <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
+                      Loading subscription plans...
                     </div>
-                  ))}
-                </div>
-              )}
+                  ) : error ? (
+                    <div className="mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700">
+                      <p className="font-semibold">Error:</p>
+                      <p>{error}</p>
+                    </div>
+                  ) : plans.length === 0 ? (
+                    <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
+                      No subscription plans available.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {plans.map((plan) => (
+                        <div
+                          key={plan.id}
+                          className="rounded-lg p-6 flex flex-col transition-colors duration-300"
+                          style={{
+                            backgroundColor: 'var(--background-secondary)',
+                            boxShadow: 'var(--card-shadow)',
+                            border: plan.is_featured ? '2px solid var(--primary-color)' : 'none'
+                          }}
+                        >
+                          {plan.is_featured && (
+                            <div className="mb-2">
+                              <span className="px-2 py-1 rounded text-xs font-medium"
+                                style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}>
+                                Featured
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="flex items-baseline mb-4">
+                            <h2 className="text-3xl font-bold" style={{ color: 'var(--text-color)' }}>
+                              {getCurrencySymbol(plan.currency)}{new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                              }).format(plan.price)}
+                            </h2>
+                            <span className="ml-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                              /{plan.billing_period} {plan.billing_period_type}
+                            </span>
+                          </div>
+
+                          <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                            {plan.name}
+                          </h3>
+
+                          {plan.description && (
+                            <p className="mb-4 flex-grow text-sm" style={{ color: 'var(--text-secondary)' }}>
+                              {plan.description.replace(/<[^>]*>/g, '')}
+                            </p>
+                          )}
+
+                          <div className="mb-4 space-y-2 text-sm">
+                            <div style={{ color: 'var(--text-secondary)' }}>
+                              <strong>CPU:</strong> {plan.cpu_limit} cores
+                            </div>
+                            <div style={{ color: 'var(--text-secondary)' }}>
+                              <strong>Memory:</strong> {plan.memory_limit}
+                            </div>
+                            <div style={{ color: 'var(--text-secondary)' }}>
+                              <strong>Storage:</strong> {plan.storage_limit_gb} GB
+                            </div>
+                            <div style={{ color: 'var(--text-secondary)' }}>
+                              <strong>Users:</strong> {plan.max_users === 0 ? 'Unlimited' : plan.max_users}
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => handleSubscribe(plan)}
+                            disabled={isLoading || isCreatingSubscription}
+                            className="px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
+                          >
+                            {currentSubscription && !currentSubscription.is_trial ? 'Upgrade' : 'Subscribe'}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </>
               )}
 
