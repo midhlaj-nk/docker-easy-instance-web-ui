@@ -74,6 +74,17 @@ function Header() {
                   </a>
                 </li>
 
+                {/* 2. Features */}
+                <li>
+                  <a
+                    href="/pricing"
+                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                  >
+                    Pricing
+                  </a>
+                </li>
+                
+
                 {/* 3. Our Services */}
                 <li>
                   <a
@@ -192,6 +203,16 @@ function Header() {
                     className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
                   >
                     Our Services
+                  </a>
+                </li>
+
+                {/* 3. Pricing */}
+                <li>
+                  <a
+                    href="/pricing"
+                    className="block py-2 px-2 rounded-lg hover:text-[var(--primary-color)]"
+                  >
+                    Pricing
                   </a>
                 </li>
 
