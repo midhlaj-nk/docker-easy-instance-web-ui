@@ -136,7 +136,7 @@ function Features() {
   return (
     <>
       <div className="container-fluid cmpad py-10 lg:py-20 text-center">
-        <h2 className="text-4xl leading-tight font-medium mb-3">
+        <h2 className="text-black dark:text-black text-4xl leading-tight font-medium mb-3">
           Simple to Use{" "}
           <span className="text-[var(--primary-color)]">Powerful</span> in
           Actions.
@@ -154,7 +154,7 @@ function Features() {
         </a>
         <div className="featuress-grid mt-13">
           {features.map((feature, index) => (
-            <div className="features-card" key={index}>
+            <div className="text-black dark:text-black features-card" key={index}>
               <div className="icon-containers">{feature.icon}</div>
               <h3 className="text-xl leading-tight font-medium mb-3">
                 {feature.title}

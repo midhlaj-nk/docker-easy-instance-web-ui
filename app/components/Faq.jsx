@@ -43,10 +43,10 @@ function Faq() {
           <div className="hero-section">
             {/* <div className="get-started-tag">Get started today</div> */}
 
-            <h2 className="text-3xl md:text-5xl leading-tight font-medium mb-3 text-[#333]">
+            <h2 className="text-black dark:text-black text-3xl md:text-5xl leading-tight font-medium mb-3 text-[#333]">
               Get started <span className="text-[var(--primary-color)]">with</span> easyinstance
             </h2>
-            <p className="max-w-xl mx-auto text-[#58586b] leading-relaxed mb-10">
+            <p className="text-black dark:text-black max-w-xl mx-auto text-[#58586b] leading-relaxed mb-10">
               Launch your Odoo instance in seconds, scale effortlessly, and
               focus on growing your business no hidden fees, no complex setup.
             </p>
@@ -60,7 +60,7 @@ function Faq() {
 
               <a
                 href="#"
-                className="px-10 h-full py-4 bg-[var(--primary-color)] text-white rounded-full  hover:bg-[#454685] transition duration-300"
+                className="text-black dark:text-black px-10 h-full py-4 bg-[var(--primary-color)] text-white rounded-full  hover:bg-[#454685] transition duration-300"
               >
                 Started Free Today
               </a>
@@ -68,7 +68,7 @@ function Faq() {
           </div>
         </div>
       </div>
-      <div className="container-fluid cmpad py-10 lg:py-20 text-center">
+      <div className="text-black dark:text-black container-fluid cmpad py-10 lg:py-20 text-center">
         <h2 className="text-4xl leading-tight font-medium mb-3">
           Frequently <span className="text-[var(--primary-color)]">Asked</span>{" "}
           Questions

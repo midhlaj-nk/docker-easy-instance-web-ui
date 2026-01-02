@@ -146,7 +146,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center lg:items-center lg:h-screen">
+    <div className="flex justify-center lg:items-center lg:h-screen bg-white">
       <div className="[box-shadow:10px_10px_20px_rgb(0_0_0_/_3%)] w-[1000px] mx-auto bg-white rounded-xl overflow-hidden">
         <div className="grid grid-cols-12 gap-4 lg:h-[630px] p-3">
           <div className="col-span-12 lg:col-span-6 flex flex-col justify-center p-18 border rounded-xl bg-[#5355ce0d] border-[#6c6fe90d]">

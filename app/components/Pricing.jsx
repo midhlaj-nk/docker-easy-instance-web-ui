@@ -139,26 +139,26 @@ function Pricing() {
   return (
     <div className="bg-white text-center">
       <div className="container-fluid cmpad py-10 lg:py-20">
-        <h2 className="text-4xl leading-tight font-medium mb-3">
+        <h2 className="text-black dark:text-black text-4xl leading-tight font-medium mb-3">
           Select Plan For
-          <span className="text-[var(--primary-color)]"> Your </span> Business.
+          <span className="text-black dark:text-black text-[var(--primary-color)]"> Your </span> Business.
         </h2>
-        <p className="max-w-2xl mx-auto text-[#58586b] leading-relaxed mb-10">
+        <p className="text-black dark:text-black max-w-2xl mx-auto text-[#58586b] leading-relaxed mb-10">
           Choose the perfect plan for your Odoo deployment. From small business starters to enterprise-grade scaling, we have a solution for you.
         </p>
         <a
           href="/login"
-          className="w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
+          className="text-black dark:text-black w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
         >
           View All Plans
         </a>
         <div className="pricing-container">
           {isLoading ? (
-            <div className="text-center py-8 text-[#58586b]">
+            <div className="text-black dark:text-black text-center py-8 text-[#58586b]">
               Loading plans...
             </div>
           ) : plans.length === 0 ? (
-            <div className="text-center py-8 text-[#58586b]">
+            <div className="text-black dark:text-black text-center py-8 text-[#58586b]">
               No plans available at the moment.
             </div>
           ) : (
@@ -215,13 +215,13 @@ function Pricing() {
           )}
         </div>
       </div>
-      <div className="container-fluid cmpad py-10 lg:py-20">
+      <div className="text-black dark:text-black container-fluid cmpad py-10 lg:py-20">
         <h2 className="text-4xl leading-tight font-medium mb-3">
           Seamless Integrations For{" "}
           <span className="text-[var(--primary-color)]">Smarter</span>{" "}
           Operations.
         </h2>
-        <p className="max-w-2xl mx-auto text-[#58586b] leading-relaxed mb-3">
+        <p className="text-black dark:text-black max-w-2xl mx-auto text-[#58586b] leading-relaxed mb-3">
           Effortlessly connect with a variety of third party tools and services,
           enhancing functionality and streamlining workflows
         </p>
