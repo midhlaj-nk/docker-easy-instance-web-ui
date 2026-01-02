@@ -51,7 +51,7 @@ function Slider() {
           <span className="hidden md:inline-block px-5 py-2 bg-[#ffc98f] text-black rounded-full text-[13px]">
             Accelerate your business
           </span>
-          <h1 className="yara-font text-5xl leading-tight font-semibold mb-3 mt-8">
+          <h1 className="text-black dark:text-black yara-font text-5xl leading-tight font-semibold mb-3 mt-8">
             Transform your{" "}
             <span className="text-[var(--primary-color)]">business</span> with{" "}
             <span className="text-[55px] odoocircle">
@@ -81,14 +81,15 @@ function Slider() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 text-center max-w-[90%] m-auto">
-          <div className="p-5">
+          <div className="text-black dark:text-black p-5">
             <img src="/img/efficiency.svg" alt="" className="w-8 m-auto pb-5" />
             <h5 className="text-md font-medium mb-2">Efficiency</h5>
             <p className="text-sm max-w-[280px]">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit
+              Deploy Odoo instances in minutes with automated Docker-based setup.
+               Easy Instance eliminates manual configuration, reducing deployment time while ensuring consistent and reliable environments.
             </p>
           </div>
-          <div className="lg:border-l-1 lg:border-r-1 border-gray-200 p-5">
+          <div className="text-black dark:text-black lg:border-l-1 lg:border-r-1 border-gray-200 p-5">
             <img
               src="/img/scalability.svg"
               alt=""
@@ -96,10 +97,11 @@ function Slider() {
             />
             <h5 className="text-md font-medium mb-2">Scalability</h5>
             <p className="text-sm max-w-[280px]">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit
+              Launch, manage, and scale multiple Odoo instances effortlessly.
+               Whether for testing, staging, or production, Easy Instance adapts seamlessly as your infrastructure and user demands grow.
             </p>
           </div>
-          <div className="p-5">
+          <div className="text-black dark:text-black p-5">
             <img
               src="/img/collaboration.svg"
               alt=""
@@ -107,7 +109,8 @@ function Slider() {
             />
             <h5 className="text-md font-medium mb-2">Collaboration</h5>
             <p className="text-sm max-w-[280px]">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit
+                Simplify collaboration by providing teams with isolated Odoo instances for development, QA, and client demos.
+                 Shared access and standardized environments ensure smooth teamwork across projects.
             </p>
           </div>
         </div>

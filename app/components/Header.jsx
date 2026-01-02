@@ -57,7 +57,7 @@ function Header() {
                   <li>
                     <a
                       href="/blogs"
-                      className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                      className="text-black dark:text-black transition duration-300 hover:text-[var(--primary-color)]"
                     >
                       Blogs
                     </a>
@@ -68,7 +68,7 @@ function Header() {
                 <li>
                   <a
                     href="/features"
-                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                    className="text-black dark:text-black transition duration-300 hover:text-[var(--primary-color)]"
                   >
                     Features
                   </a>
@@ -78,7 +78,7 @@ function Header() {
                 <li>
                   <a
                     href="/services"
-                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                    className="text-black dark:text-black transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
                   >
                     Our Services
                   </a>
@@ -88,7 +88,7 @@ function Header() {
                 <li>
                   <a
                     href="/about"
-                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                    className="text-black dark:text-black transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
                   >
                     About Us
                   </a>
@@ -98,7 +98,7 @@ function Header() {
                 <li>
                   <a
                     href="/contact"
-                    className="transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
+                    className="text-black dark:text-black transition duration-300 ease-in-out hover:text-[var(--primary-color)] t"
                   >
                     Contact Us
                   </a>
