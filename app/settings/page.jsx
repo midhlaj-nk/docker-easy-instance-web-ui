@@ -38,11 +38,11 @@ function SettingsPage({ selectedInstance }) {
   };
 
   return (
-    <div>
-      <div className="transition-colors duration-300" style={{ backgroundColor: 'var(--background)' }}>
-        <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <div className="flex mt-16">
-          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+    <div className="dashboard-theme">
+    <div className="bg-[var(--background)] transition-colors duration-300 min-h-screen font-sans">
+      <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="flex pt-16">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
           <main className="flex-1 lg:pl-[17rem] lg:h-[calc(100vh_-_64px)] overflow-hidden overflow-y-auto">
             <div className="p-6">
               {/* Danger Zone - Instance Deletion */}

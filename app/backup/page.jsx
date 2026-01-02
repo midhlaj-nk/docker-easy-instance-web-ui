@@ -57,66 +57,111 @@ function BackupPage() {
   const handleBackupNow = async () => {
     if (!selectedInstance?.id) return;
 
-    // First, fetch the latest configurations to check if any exist
     try {
       const configResult = await fetchBackupConfigurations(selectedInstance.id);
-      
-      // Check the response data directly
       const configurations = configResult.data?.configurations || [];
-      
-      // Also check the store state as fallback
       const storeSchedules = useBackupStore.getState().schedules || [];
-      
-      // Determine if configurations exist - check both sources
-      const hasConfigurations = (Array.isArray(configurations) && configurations.length > 0) || 
-                                (Array.isArray(storeSchedules) && storeSchedules.length > 0);
-      
+      const hasConfigurations =
+        (Array.isArray(configurations) && configurations.length > 0) ||
+        (Array.isArray(storeSchedules) && storeSchedules.length > 0);
+
       if (!hasConfigurations) {
-        const result = await showConfirm(
-          "No Backup configuration found. Please create a configuration first.\n\nWould you like to go to the Configuration tab to create one?",
-          "No Backup Configuration",
-          "Yes, go to Configuration",
-          "Cancel"
-        );
-        if (result.isConfirmed) {
-          setActiveTab("configure");
-          // Open the config modal
-          setEditingConfig(null);
-          setShowConfigModal(true);
+        // Check if user has active subscription
+        if (hasActiveSubscription) {
+          // Only show "Yes, go to Configuration" if subscription is active
+          const result = await showConfirm(
+            "No Backup configuration found. Please create a configuration first.\n\nWould you like to go to the Configuration tab to create one?",
+            "No Backup Configuration",
+            "Yes, go to Configuration",
+            "Cancel"
+          );
+          if (result.isConfirmed) {
+            setActiveTab("configure");
+            setEditingConfig(null);
+            setShowConfigModal(true);
+          }
+        } else {
+          // If no subscription, just show info/error
+          await showError(
+            "No Backup configuration found. You need an active subscription or trial plan to create a configuration."
+          );
         }
         return;
       }
     } catch (error) {
       logger.error("Error checking backup configurations:", error);
-      // If fetch fails, let the backend handle the check
-      // Continue to attempt backup creation
+      // Optionally allow backend to handle it
     }
 
+    // Proceed with backup creation if configuration exists
     const result = await createBackup(selectedInstance.id, {});
-
     if (result.success) {
       await showSuccess("Backup created successfully!");
-      // Refresh backup list
       await fetchBackups(selectedInstance.id);
     } else {
-      // Check if error is about missing configuration
-      if (result.error && (result.error.includes("No Backup configuration") || result.error.includes("NO_BACKUP_CONFIG"))) {
-        const confirmResult = await showConfirm(
-          "No Backup configuration found. Please create a configuration first.\n\nWould you like to go to the Configuration tab to create one?",
-          "No Backup Configuration",
-          "Yes, go to Configuration",
-          "Cancel"
-        );
-        if (confirmResult.isConfirmed) {
-          setActiveTab("configure");
-          setEditingConfig(null);
-          setShowConfigModal(true);
+      if (
+        result.error &&
+        (result.error.includes("No Backup configuration") ||
+          result.error.includes("NO_BACKUP_CONFIG"))
+      ) {
+        if (hasActiveSubscription) {
+          const confirmResult = await showConfirm(
+            "No Backup configuration found. Please create a configuration first.\n\nWould you like to go to the Configuration tab to create one?",
+            "No Backup Configuration",
+            "Yes, go to Configuration",
+            "Cancel"
+          );
+          if (confirmResult.isConfirmed) {
+            setActiveTab("configure");
+            setEditingConfig(null);
+            setShowConfigModal(true);
+          }
+        } else {
+          await showError(
+            "No Backup configuration found. You need an active subscription or trial plan to create a configuration."
+          );
         }
       } else {
         await showError(`Failed to create backup: ${result.error}`);
       }
     }
   };
+
+
+  const [showNoSubscriptionPopup, setShowNoSubscriptionPopup] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [isLoadingSubscription, setIsLoadingSubscription] = useState(false);
+  
+
+  // Fetch subscription data
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      if (!selectedInstance) return;
+
+      setIsLoadingSubscription(true);
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/v1/instances/${selectedInstance.id}/subscription/status`
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch subscription');
+        }
+
+        const data = await response.json();
+
+        setHasActiveSubscription(!!data.has_active_subscription);
+      } catch (err) {
+        console.error('Error fetching subscription:', err);
+        setHasActiveSubscription(false);
+      } finally {
+        setIsLoadingSubscription(false);
+      }
+    };
+
+    fetchSubscription();
+  }, [selectedInstance?.id]);
+
 
   const handleDownloadBackup = async (backupId, filename) => {
     const { token } = useAuthStore.getState();
@@ -280,13 +325,10 @@ function BackupPage() {
   }
 
   return (
-    <div>
-      <div
-        className="transition-colors duration-300"
-        style={{ backgroundColor: "var(--background)" }}
-      >
+    <div className="dashboard-theme">
+      <div className="bg-[var(--background)] transition-colors duration-300 min-h-screen font-sans">
         <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <div className="flex mt-16">
+        <div className="flex pt-16">
           <Sidebar
             isOpen={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
@@ -610,13 +652,19 @@ function BackupPage() {
                     <div className="flex justify-end mb-4">
                       <button
                         onClick={() => {
+                          if (!hasActiveSubscription) {
+                            setShowNoSubscriptionPopup(true); // show popup
+                            return; // prevent opening the config modal
+                          }
                           setEditingConfig(null);
                           setShowConfigModal(true);
                         }}
-                        disabled={isLoading}
+                        disabled={isLoading || isLoadingSubscription}
                         className="px-6 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
-                          backgroundColor: "var(--primary-color)",
+                          backgroundColor: hasActiveSubscription
+                            ? "var(--primary-color)"
+                            : "#9ca3af", // gray when disabled
                           color: "#ffffff",
                         }}
                       >
@@ -636,6 +684,53 @@ function BackupPage() {
                         </svg>
                         Add Configuration
                       </button>
+
+                      {/* Popup Modal */}
+                      {showNoSubscriptionPopup && (
+                        <div className="fixed inset-0 flex items-center justify-center z-50">
+                          {/* Blurred background only */}
+                          <div
+                            className="absolute inset-0 backdrop-blur-sm"
+                            onClick={() => setShowNoSubscriptionPopup(false)}
+                          ></div>
+
+                          {/* Modal content */}
+                          <div
+                            className="relative rounded-lg p-8 flex flex-col justify-center items-center text-center max-w-sm w-full bg-white shadow-lg border-4 border-blue-500 z-10 animate-fadeIn"
+                            style={{ minHeight: "200px" }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="80"
+                              height="80"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="var(--text-secondary)"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M12 1v4"></path>
+                              <path d="M12 19v4"></path>
+                              <path d="M4.22 4.22l2.83 2.83"></path>
+                              <path d="M17.95 17.95l2.83 2.83"></path>
+                              <circle cx="12" cy="12" r="5"></circle>
+                            </svg>
+                            <h3 className="text-2xl font-bold mb-3 mt-5" style={{ color: "var(--text-color)" }}>
+                              No Active Subscription
+                            </h3>
+                            <p className="mb-6 max-w-xs" style={{ color: "var(--text-secondary)" }}>
+                              You do not have an active subscription or trial plan. Please subscribe to a plan to add configurations and use this feature.
+                            </p>
+                            <button
+                              onClick={() => setShowNoSubscriptionPopup(false)}
+                              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                            >
+                              OK
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Loading State */}

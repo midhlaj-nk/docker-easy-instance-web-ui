@@ -76,6 +76,7 @@ function SubscriptionsPage({ selectedInstance }) {
         const active = subsData.data.subscriptions.find(
           sub => (sub.state === 'active' || sub.state === 'scheduled') && sub.payment_status === 'paid'
         );
+        console.log(active)
         setCurrentSubscription(active || null);
       }
     } catch (err) {
@@ -118,53 +119,92 @@ function SubscriptionsPage({ selectedInstance }) {
     fetchData();
   }, [selectedInstance, token]);
 
-  const handleSubscribe = async (plan) => {
-    if (!selectedInstance || !token) {
-      setError('Please select an instance and ensure you are logged in');
-      return;
-    }
+  const [isUpdatingAutoRenew, setIsUpdatingAutoRenew] = useState(false);
 
-    setIsCreatingSubscription(true);
-    setError(null);
-
+  const handleAutoRenewToggle = async () => {
+  setIsUpdatingAutoRenew(true);
+  
     try {
-      // Create subscription directly - no modal
-      const response = await fetch(`${API_BASE_URL}/api/v1/instances/${selectedInstance.id}/subscriptions`, {
+      const response = await fetch(`${API_BASE_URL}/api/instances/subscriptions/auto-renew`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscription_id: currentSubscription.id, // or appropriate ID field
+          auto_renew: !currentSubscription.auto_renew
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update auto-renew setting');
+      }
+
+      const data = await response.json();
+      
+      // Update your state with the new subscription data
+      setCurrentSubscription(prev => ({
+        ...prev,
+        auto_renew: !prev.auto_renew
+      }));
+      
+    } catch (error) {
+      console.error('Error updating auto-renew:', error);
+      alert('Failed to update auto-renew setting. Please try again.');
+    } finally {
+      setIsUpdatingAutoRenew(false);
+    }
+  };
+
+
+  const handleSubscribe = async (plan) => {
+  if (!selectedInstance || !token) {
+    setError('Please select an instance and ensure you are logged in');
+    return;
+  }
+
+  setIsCreatingSubscription(true);
+  setError(null);
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/v1/instances/${selectedInstance.id}/subscriptions`,
+      {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           plan_id: plan.id,
+          return_url: `${window.location.origin}/subscriptions`,
         }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to create subscription');
       }
+    );
 
-      // Check if we should redirect to invoice portal
-      if (data.data?.redirect_immediately && data.data?.invoice_portal_url) {
-        // Open invoice portal in new tab
-        window.open(data.data.invoice_portal_url, '_blank');
-        setIsCreatingSubscription(false);
-      } else if (data.data?.invoice_portal_url) {
-        // Fallback: open in new tab even if flag not set
-        window.open(data.data.invoice_portal_url, '_blank');
-        setIsCreatingSubscription(false);
-      } else {
-        throw new Error('Invoice portal URL not received');
-      }
-    } catch (err) {
-      setError(err.message || 'Failed to create subscription');
-      console.error('Error creating subscription:', err);
-      setIsCreatingSubscription(false);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Failed to create subscription');
     }
-    // Note: setIsCreatingSubscription(false) is not called on success because we redirect immediately
-  };
+
+    if (!result.data?.invoice_portal_url) {
+      throw new Error('Invoice portal URL not received');
+    }
+
+    // Redirect to Odoo payment portal (same tab)
+    window.location.href = result.data.invoice_portal_url;
+    // window.open(result.data.invoice_portal_url, '_blank');
+
+  } catch (err) {
+    setError(err.message || 'Failed to create subscription');
+    setIsCreatingSubscription(false);
+  }
+};
+
+
+
+
 
   const handleDeleteSubscription = async (subscriptionId) => {
     if (!selectedInstance || !token) {
@@ -243,19 +283,27 @@ function SubscriptionsPage({ selectedInstance }) {
     }
   };
 
-  const trialStatus = getTrialStatus();
+  const [billingPeriod, setBillingPeriod] = useState('month');
 
+  useEffect(() => {
+    if (plans.length > 0 && !plans.some(p => p.billing_period_type === billingPeriod)) {
+      setBillingPeriod(plans[0].billing_period_type);
+    }
+  }, [plans]);
+
+  const trialStatus = getTrialStatus();
   return (
-    <div>
-      <div className="transition-colors duration-300" style={{ backgroundColor: 'var(--background)' }}>
-        <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <div className="flex mt-16">
-          <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-          <main className="flex-1 lg:pl-[17rem] lg:h-[calc(100vh_-_64px)] overflow-hidden overflow-y-auto">
-            <div className="p-6">
-              <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-                Subscription Management
-              </h1>
+  <div className="dashboard-theme">
+    <div className="bg-[var(--background)] transition-colors duration-300 min-h-screen font-sans">
+      <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      
+      <div className="flex pt-16">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <main className="flex-1 lg:pl-[17rem] lg:h-[calc(100vh_-_64px)] overflow-hidden overflow-y-auto">
+          <div className="p-6">
+            <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
+              Subscription Management
+            </h1>
 
               {/* Current Subscription Details - Only show when payment is completed */}
               {currentSubscription && currentSubscription.payment_status === 'paid' && (
@@ -303,9 +351,26 @@ function SubscriptionsPage({ selectedInstance }) {
                             PAID
                           </span>
                         </p>
-                        {currentSubscription.auto_renew && (
-                          <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
-                            <strong>Auto Renew:</strong> <span className="text-green-600">Enabled</span>
+                        {currentSubscription.auto_renew !== undefined && (
+                          <p className="text-sm mb-1 flex items-center" style={{ color: 'var(--text-secondary)' }}>
+                            <strong>Auto Renew:</strong> 
+                            <button
+                              onClick={handleAutoRenewToggle}
+                              disabled={isUpdatingAutoRenew}
+                              className="ml-2 relative inline-flex h-4 w-8 items-center rounded-full transition-colors focus:outline-none"
+                              style={{
+                                backgroundColor: currentSubscription.auto_renew ? '#10b981' : '#d1d5db',
+                                opacity: isUpdatingAutoRenew ? 0.5 : 1,
+                                cursor: isUpdatingAutoRenew ? 'not-allowed' : 'pointer'
+                              }}
+                            >
+                              <span
+                                className="inline-block h-3 w-3 transform rounded-full bg-white transition-transform"
+                                style={{
+                                  transform: currentSubscription.auto_renew ? 'translateX(1.1rem)' : 'translateX(0.15rem)'
+                                }}
+                              />
+                            </button>
                           </p>
                         )}
                       </div>
@@ -415,8 +480,6 @@ function SubscriptionsPage({ selectedInstance }) {
                               {sub.invoice_portal_url && (
                                 <a
                                   href={sub.invoice_portal_url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
                                   className="inline-block px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:opacity-90"
                                   style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
                                 >
@@ -460,86 +523,162 @@ function SubscriptionsPage({ selectedInstance }) {
               {/* Subscription Plans - Only show if no active paid subscription */}
               {!currentSubscription && (
                 <>
-                  <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>
+                  {/* Dynamic Billing Period Tabs */}
+                  {(() => {
+                    const availableBillingTypes = [...new Set(plans.map(p => p.billing_period_type))];
+                    const billingTypeLabels = {
+                      'day': 'Daily billing',
+                      'week': 'Weekly billing',
+                      'month': 'Monthly billing',
+                      'year': 'Yearly billing'
+                    };
+                    
+                    return availableBillingTypes.length > 1 && (
+                      <div className="flex justify-center mb-8">
+                        <div className="inline-flex rounded-xl p-1.5 shadow-sm" 
+                          style={{ 
+                            backgroundColor: 'var(--background-secondary)',
+                            border: '1px solid var(--border-color, #e5e7eb)'
+                          }}>
+                          {availableBillingTypes.map((type) => (
+                            <button
+                              key={type}
+                              onClick={() => setBillingPeriod(type)}
+                              className="px-8 py-3 rounded-lg font-semibold transition-all duration-300 relative"
+                              style={{
+                                backgroundColor: billingPeriod === type ? '#2196f3' : 'transparent',
+                                color: billingPeriod === type ? '#ffffff' : 'var(--text-secondary)',
+                                boxShadow: billingPeriod === type ? '0 4px 12px rgba(33, 150, 243, 0.4)' : 'none',
+                                transform: billingPeriod === type ? 'translateY(-1px)' : 'none'
+                              }}
+                            >
+                              {billingTypeLabels[type] || type}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
                     Available Plans
                   </h2>
 
                   {isLoading ? (
-                    <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
-                      Loading subscription plans...
+                    <div className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>
+                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-solid border-current border-r-transparent mb-4"></div>
+                      <p className="text-lg">Loading subscription plans...</p>
                     </div>
                   ) : error ? (
-                    <div className="mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700">
-                      <p className="font-semibold">Error:</p>
-                      <p>{error}</p>
+                    <div className="mb-6 p-6 rounded-xl bg-red-50 border-2 border-red-200 shadow-sm">
+                      <p className="font-bold text-red-800 text-lg mb-2">⚠️ Error</p>
+                      <p className="text-red-700">{error}</p>
                     </div>
                   ) : plans.length === 0 ? (
-                    <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
-                      No subscription plans available.
+                    <div className="text-center py-16 rounded-xl" 
+                      style={{ 
+                        backgroundColor: 'var(--background-secondary)',
+                        border: '2px dashed var(--border-color, #e5e7eb)'
+                      }}>
+                      <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                        No subscription plans available at the moment.
+                      </p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {plans.map((plan) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {plans
+                        .filter(plan => plan.billing_period_type === billingPeriod)
+                        .map((plan) => (
                         <div
                           key={plan.id}
-                          className="rounded-lg p-6 flex flex-col transition-colors duration-300"
+                          className="rounded-xl p-6 flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-2xl relative overflow-hidden group"
                           style={{
                             backgroundColor: 'var(--background-secondary)',
                             boxShadow: 'var(--card-shadow)',
-                            border: plan.is_featured ? '2px solid var(--primary-color)' : 'none'
+                            border: plan.is_featured ? '3px solid #2196f3' : '1px solid var(--border-color, #e5e7eb)'
                           }}
                         >
+                          {/* Gradient overlay for featured plans */}
                           {plan.is_featured && (
-                            <div className="mb-2">
-                              <span className="px-2 py-1 rounded text-xs font-medium"
-                                style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}>
-                                Featured
+                            <div 
+                              className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600"
+                            />
+                          )}
+
+                          {plan.is_featured && (
+                            <div className="mb-3">
+                              <span className="px-3 py-1.5 rounded-full text-xs font-bold shadow-md"
+                                style={{ 
+                                  backgroundColor: '#2196f3', 
+                                  color: '#ffffff',
+                                  letterSpacing: '0.5px'
+                                }}>
+                                ⭐ FEATURED
                               </span>
                             </div>
                           )}
 
+                          <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--text-color)' }}>
+                            {plan.name}
+                          </h3>
+
                           <div className="flex items-baseline mb-4">
-                            <h2 className="text-3xl font-bold" style={{ color: 'var(--text-color)' }}>
-                              {getCurrencySymbol(plan.currency)}{new Intl.NumberFormat('en-US', {
+                            <span className="text-lg font-medium mr-1" style={{ color: 'var(--text-secondary)' }}>
+                              {getCurrencySymbol(plan.currency)}
+                            </span>
+                            <h2 className="text-4xl font-extrabold" style={{ color: 'var(--text-color)' }}>
+                              {new Intl.NumberFormat('en-US', {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0,
                               }).format(plan.price)}
                             </h2>
-                            <span className="ml-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                              /{plan.billing_period} {plan.billing_period_type}
+                            <span className="ml-2 text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                              /{plan.billing_period === 1 ? '' : plan.billing_period}{plan.billing_period_type === 'month' ? 'mo' : plan.billing_period_type === 'year' ? 'yr' : plan.billing_period_type}
                             </span>
                           </div>
 
-                          <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                            {plan.name}
-                          </h3>
-
                           {plan.description && (
-                            <p className="mb-4 flex-grow text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            <p 
+                              className="mb-6 flex-grow text-sm leading-relaxed" 
+                              style={{ 
+                                color: 'var(--text-secondary)', 
+                                whiteSpace: 'pre-line',
+                                minHeight: '60px'
+                              }}
+                            >
                               {plan.description.replace(/<[^>]*>/g, '')}
                             </p>
                           )}
 
-                          <div className="mb-4 space-y-2 text-sm">
-                            <div style={{ color: 'var(--text-secondary)' }}>
-                              <strong>CPU:</strong> {plan.cpu_limit} cores
+                          <div className="mb-6 space-y-3 text-sm p-4 rounded-lg" 
+                            style={{ backgroundColor: 'var(--background, #f9fafb)' }}>
+                            <div className="flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="text-green-500 font-bold">✓</span>
+                              <span><strong className="font-semibold">CPU:</strong> {plan.cpu_limit} cores</span>
                             </div>
-                            <div style={{ color: 'var(--text-secondary)' }}>
-                              <strong>Memory:</strong> {plan.memory_limit}
+                            <div className="flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="text-green-500 font-bold">✓</span>
+                              <span><strong className="font-semibold">Memory:</strong> {plan.memory_limit}</span>
                             </div>
-                            <div style={{ color: 'var(--text-secondary)' }}>
-                              <strong>Storage:</strong> {plan.storage_limit_gb} GB
+                            <div className="flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="text-green-500 font-bold">✓</span>
+                              <span><strong className="font-semibold">Storage:</strong> {plan.storage_limit_gb} GB</span>
                             </div>
-                            <div style={{ color: 'var(--text-secondary)' }}>
-                              <strong>Users:</strong> {plan.max_users === 0 ? 'Unlimited' : plan.max_users}
+                            <div className="flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="text-green-500 font-bold">✓</span>
+                              <span><strong className="font-semibold">Users:</strong> {plan.max_users === 0 ? 'Unlimited' : `Up to ${plan.max_users}`}</span>
                             </div>
                           </div>
 
                           <button
                             onClick={() => handleSubscribe(plan)}
                             disabled={isLoading || isCreatingSubscription}
-                            className="px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-                            style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
+                            className="w-full px-6 py-3.5 rounded-lg font-bold text-base transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                            style={{ 
+                              backgroundColor: plan.is_featured ? '#2196f3' : 'var(--primary-color)', 
+                              color: '#ffffff',
+                              letterSpacing: '0.3px'
+                            }}
                           >
                             {currentSubscription && !currentSubscription.is_trial ? 'Upgrade' : 'Subscribe'}
                           </button>
@@ -549,7 +688,6 @@ function SubscriptionsPage({ selectedInstance }) {
                   )}
                 </>
               )}
-
             </div>
           </main>
         </div>
