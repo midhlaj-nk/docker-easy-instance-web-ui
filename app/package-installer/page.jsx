@@ -133,7 +133,7 @@ function PackageInstaller({ selectedInstance }) {
             onClose={() => setIsSidebarOpen(false)}
           />
 
-          <main className="flex-1 lg:pl-[17rem] p-6 overflow-y-auto">
+          <main className="flex-1 lg:pl-[18rem] p-6 pr-6 lg:pr-12 overflow-y-auto">
             {/* Package Installation Section */}
             <div className="glass-card p-6">
               <div className="mb-6">

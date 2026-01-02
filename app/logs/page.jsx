@@ -183,7 +183,7 @@ function LogsPage({ selectedInstance }) {
                     placeholder="Search logs..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-white pl-10 pr-4 py-2 rounded-lg outline-none transition-colors duration-300"
+                    className="glass-card w-full bg-white pl-10 pr-4 py-2 rounded-lg outline-none transition-colors duration-300"
                     style={{
 
                       color: 'var(--text-color)',

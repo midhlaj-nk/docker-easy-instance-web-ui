@@ -52,7 +52,6 @@ const BackupConfigModal = ({ isOpen, onClose, onSave, instanceId, editConfig = n
   const [testingConnection, setTestingConnection] = useState(false);
 
   const destinationOptions = [
-    { value: 'local', label: 'Local Storage' },
     { value: 'ftp', label: 'FTP' },
     { value: 'sftp', label: 'SFTP' },
     { value: 'google_drive', label: 'Google Drive' },
