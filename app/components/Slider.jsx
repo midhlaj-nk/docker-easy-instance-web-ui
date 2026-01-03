@@ -86,7 +86,6 @@ function Slider() {
             <h5 className="text-md font-medium mb-2">Efficiency</h5>
             <p className="text-sm max-w-[280px]">
               Deploy Odoo instances in minutes with automated Docker-based setup.
-               Easy Instance eliminates manual configuration, reducing deployment time while ensuring consistent and reliable environments.
             </p>
           </div>
           <div className="text-black dark:text-black lg:border-l-1 lg:border-r-1 border-gray-200 p-5">
@@ -98,7 +97,6 @@ function Slider() {
             <h5 className="text-md font-medium mb-2">Scalability</h5>
             <p className="text-sm max-w-[280px]">
               Launch, manage, and scale multiple Odoo instances effortlessly.
-               Whether for testing, staging, or production, Easy Instance adapts seamlessly as your infrastructure and user demands grow.
             </p>
           </div>
           <div className="text-black dark:text-black p-5">
@@ -109,9 +107,7 @@ function Slider() {
             />
             <h5 className="text-md font-medium mb-2">Collaboration</h5>
             <p className="text-sm max-w-[280px]">
-                Simplify collaboration by providing teams with isolated Odoo instances for development, QA, and client demos.
-                 Shared access and standardized environments ensure smooth teamwork across projects.
-            </p>
+              Provide isolated Odoo instances to streamline team collaboration.            </p>
           </div>
         </div>
       </div>

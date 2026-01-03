@@ -152,7 +152,7 @@ function Pricing() {
         >
           View All Plans
         </a>
-        <div className="pricing-container">
+        <div className="text-black dark:text-black pricing-container">
           {isLoading ? (
             <div className="text-black dark:text-black text-center py-8 text-[#58586b]">
               Loading plans...
