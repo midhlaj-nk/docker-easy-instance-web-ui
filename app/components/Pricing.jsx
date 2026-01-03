@@ -148,7 +148,7 @@ function Pricing() {
         </p>
         <a
           href="/login"
-          className="text-black dark:text-black w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
+          className="w-52 px-10 py-3 bg-[var(--primary-color)] text-white rounded-full hover:bg-[#454685] transition duration-300"
         >
           View All Plans
         </a>
